@@ -1,0 +1,214 @@
+package Ventas;
+
+import Login.ConexionDB;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
+
+public class VentaProductos extends JFrame {
+
+    private JTable tablaProductos;
+    private DefaultTableModel modeloProductos;
+    private JTable carrito;
+    private DefaultTableModel modeloCarrito;
+    private JButton btnAgregar, btnVender;
+    private JLabel lblTotal;
+    private ArrayList<Producto> productos = new ArrayList<>();
+    private ArrayList<Producto> carritoCompra = new ArrayList<>();
+    private double totalVenta = 0.0;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Connection conexion = null;
+
+
+    public VentaProductos()  {
+        try {
+            conexion = ConexionDB.obtenerConexion();
+
+        setTitle("Sistema de Ventas");
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+
+        // Panel superior con productos
+        modeloProductos = new DefaultTableModel(new String[]{"ID", "Nombre", "Descripción", "Precio", "Stock"}, 0);
+        tablaProductos = new JTable(modeloProductos);
+        cargarProductos();
+
+        JButton btnAgregarAlCarrito = new JButton("Agregar al Carrito");
+        btnAgregarAlCarrito.addActionListener(e -> agregarAlCarrito());
+
+        JPanel panelSuperior = new JPanel(new BorderLayout());
+        panelSuperior.add(new JScrollPane(tablaProductos), BorderLayout.CENTER);
+        panelSuperior.add(btnAgregarAlCarrito, BorderLayout.SOUTH);
+
+        // Panel inferior con carrito
+        modeloCarrito = new DefaultTableModel(new String[]{"ID", "Nombre", "Cantidad", "Precio", "Subtotal"}, 0);
+        carrito = new JTable(modeloCarrito);
+        JButton btnEliminar = new JButton("Eliminar del Carrito");
+        btnEliminar.addActionListener(e -> eliminarDelCarrito());
+
+        btnVender = new JButton("Realizar Venta");
+        btnVender.addActionListener(e -> realizarVenta());
+
+        lblTotal = new JLabel("Total: $0.00");
+
+        JPanel panelInferior = new JPanel(new BorderLayout());
+        panelInferior.add(new JScrollPane(carrito), BorderLayout.CENTER);
+
+        JPanel botonesPanel = new JPanel();
+        botonesPanel.add(btnEliminar);
+        botonesPanel.add(btnVender);
+        botonesPanel.add(lblTotal);
+
+        panelInferior.add(botonesPanel, BorderLayout.SOUTH);
+
+        // Layout principal
+        setLayout(new GridLayout(2, 1));
+        add(panelSuperior);
+        add(panelInferior);
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error de conexión: " + e.getMessage());
+        }
+        finally {
+            // Asegurarse de cerrar los recursos en el orden inverso a su apertura
+            if (rs != null) try { rs.close(); } catch (SQLException e) { /* Ignorar */ }
+            if (ps != null) try { ps.close(); } catch (SQLException e) { /* Ignorar */ }
+            if (conexion != null) ConexionDB.cerrarConexion(conexion); // Cerrar la conexión
+        }
+    }
+
+    private void cargarProductos() {
+        try {
+            String sql = "SELECT * FROM productos";
+            ps = conexion.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Object[] fila = {
+                        rs.getInt("id"),
+                        rs.getString("nombre"),
+                        rs.getString("descripcion"),
+                        rs.getBigDecimal("precio"),
+                        rs.getInt("stock")
+                };
+                modeloProductos.addRow(fila);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error cargando productos: " + e.getMessage());
+        }
+    }
+
+    private void agregarAlCarrito() {
+        int filaSeleccionada = tablaProductos.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            int id = (int) modeloProductos.getValueAt(filaSeleccionada, 0);
+            String nombre = (String) modeloProductos.getValueAt(filaSeleccionada, 1);
+            BigDecimal precio = (BigDecimal) modeloProductos.getValueAt(filaSeleccionada, 3);
+            int stock = (int) modeloProductos.getValueAt(filaSeleccionada, 4);
+
+            String cantidadStr = JOptionPane.showInputDialog(this, "Cantidad a comprar:", "Cantidad", JOptionPane.PLAIN_MESSAGE);
+            int cantidad = 1;
+            try {
+                cantidad = Integer.parseInt(cantidadStr);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Cantidad inválida");
+                return;
+            }
+
+            if (cantidad > stock) {
+                JOptionPane.showMessageDialog(this, "Stock insuficiente");
+                return;
+            }
+
+            double subtotal = precio.doubleValue() * cantidad;
+
+            Object[] filaCarrito = {id, nombre, cantidad, precio, subtotal};
+            modeloCarrito.addRow(filaCarrito);
+
+            // Actualizar total
+            totalVenta += subtotal;
+            lblTotal.setText(String.format("Total: $%.2f", totalVenta));
+
+            // Agregar al carrito
+            Producto p = new Producto(id, nombre, precio.doubleValue(), stock);
+            p.setCantidad(cantidad);
+            carritoCompra.add(p);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un producto");
+        }
+    }
+
+    private void eliminarDelCarrito() {
+        int filaSeleccionada = carrito.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            double subtotal = (double) modeloCarrito.getValueAt(filaSeleccionada, 4);
+            totalVenta -= subtotal;
+            lblTotal.setText(String.format("Total: $%.2f", totalVenta));
+            modeloCarrito.removeRow(filaSeleccionada);
+            carritoCompra.remove(filaSeleccionada);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un elemento del carrito");
+        }
+    }
+
+    private void realizarVenta() {
+        if (carritoCompra.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No hay productos en el carrito");
+            return;
+        }
+
+        try {
+            conexion = ConexionDB.obtenerConexion();
+            // Aquí debes insertar en factura y fac_det en la base de datos
+            // Ejemplo simplificado (deberás adaptar con transacciones y manejo completo)
+
+            // 1. Crear factura
+            String sql = "INSERT INTO factura (cli_id, total, creado) VALUES (?, ?, NOW())";
+            PreparedStatement psFactura = conexion.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            psFactura.setNull(1, Types.INTEGER); // Aquí deberías poner el id del cliente
+            psFactura.setDouble(2, totalVenta);
+            psFactura.executeUpdate();
+
+            ResultSet rsFactura = psFactura.getGeneratedKeys();
+            int facturaId = 0;
+            if (rsFactura.next()) {
+                facturaId = rsFactura.getInt(1);
+            }
+
+            // 2. Insertar detalles
+            for (Producto p : carritoCompra) {
+                String sqlDetalle = "INSERT INTO fac_det (fac_id, producto_id, cantidad, precio, subtotal) VALUES (?, ?, ?, ?, ?)";
+                PreparedStatement psDetalle = conexion.prepareStatement(sqlDetalle);
+                psDetalle.setInt(1, facturaId);
+                psDetalle.setInt(2, p.getId());
+                psDetalle.setInt(3, p.getCantidad());
+                psDetalle.setDouble(4, p.getPrecio());
+                psDetalle.setDouble(5, p.getCantidad() * p.getPrecio());
+                psDetalle.executeUpdate();
+
+                // Actualizar stock en productos
+                String sqlUpdateStock = "UPDATE productos SET stock = stock - ? WHERE id = ?";
+                PreparedStatement psUpdate = conexion.prepareStatement(sqlUpdateStock);
+                psUpdate.setInt(1, p.getCantidad());
+                psUpdate.setInt(2, p.getId());
+                psUpdate.executeUpdate();
+            }
+
+            JOptionPane.showMessageDialog(this, "Venta realizada con éxito");
+            // Limpiar carrito
+            modeloCarrito.setRowCount(0);
+            carritoCompra.clear();
+            totalVenta = 0;
+            lblTotal.setText("Total: $0.00");
+            // cargarProductos(); // recargar productos actualizados
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al realizar la venta: " + e.getMessage());
+        }
+    }
+}
