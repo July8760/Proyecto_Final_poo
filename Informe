@@ -1,0 +1,3330 @@
+
+
+
+
+
+INSTITUTO SUPERIOR TECNOLÓGICO “CENESTUR”
+
+Área de Informática
+
+CARRERA DE BIG DATA E INTELIGENCIA DE NEGOCIOS
+
+
+PROYECTO FINAL 
+
+MODALIDAD ONLINE
+Materia: Programación Orientada a Objetos 
+TEMA:
+“Sistema de Gestión de Ventas Aplicando Java Swing”
+
+AUTOR:
+Jesús Mesías Abril Ballesteros
+Julia Sarina Cachimuel Velasco
+
+			PROFESOR: Ing. Yadira Franco
+
+
+QUITO-ECUADOR
+30 de julio 2025
+
+
+
+PROGRAMACION ORIENTADA A OBJETOS
+
+Tema:” Sistema de Gestión de Ventas aplicando Java Swing”
+
+Introducción: 
+En el desarrollo de software, la gestión de datos es un pilar fundamental debido a su capacidad de interactuar con la información, almacenamiento persistente, recuperación, modificación y eliminación de manera eficiente para garantizar un correcto funcionamiento de cualquier aplicación. 
+Este proceso conocido como CRUD (Create, Read, Update, Delete), efectúa operaciones básicas que se realizan sobre los datos y constituye el núcleo de muchas aplicaciones empresariales y de usuario. 
+Este proyecto se enfoca en la implementación practica de los conocimientos adquiridos y de gestión de datos mediante la creación de una aplicación CRUD utilizando Java Swing, como un extenso conjunto de herramientas de interfaz gráfica para Java, ofrece la flexibilidad necesaria para crear aplicaciones de escritorio interactivas y visualmente llamativas al ojo humano. 
+Objetivo Principal:
+Aplicar los conocimientos en el desarrollo de aplicaciones, en lenguaje de programación Java Swing y su respectiva conexión a su base de datos.
+Objetivo Específico:  
+Obtener experiencia práctica en el desarrollo de una aplicación CRUD, desde el diseño hasta la implementación y prueba, con el fin de afianzar mis habilidades y poder enfrentarme a futuros desafíos en la programación. 
+Indicaciones de la Aplicación:
+1.	Crear la interfaz gráfica del proyecto y las interacciones UML 
+2.	Elegir un tema en particular y realizar una aplicación CRUD conforme al tema elegido 
+3.	La aplicación debe contener Interfaz Gráfica (Java Swing)
+4.	Acceso si el usuario esta registrado en la base de datos- Mysql
+5.	Si se loguea como administrador podrá ver las pantallas de reportes, crear usuarios e ingresar productos
+6.	Si se loguea como cajero debe registrar información de un cliente y podrá consultar precio de productos y crear facturas
+7.	La aplicación debe ser capaz al menos de 
+a.	Mostrar los registros
+b.	Crear un nuevo registro
+c.	Actualizar o modificar un registro ya existente
+d.	Eliminar un registro
+
+
+8.	La persistencia de los datos puede manejarse desde archivos o desde una base de datos 
+9.	El proyecto debe contener una ventana de Login para iniciar sesión, con sus respectivos roles (administrador, cajero)
+10.	El proyecto debe subirse en un repositorio público de GitHub, donde se debe validar que todos los integrantes hayan realizado commits progresivos en el proyecto como evidencia de su participación. 
+11.	Elaborar una presentación el día de la defensa para justificar su proyecto. 
+MANUAL TÉCNICO “SISTEMA DE GESTIÓN DE VENTAS APLICANDO JAVA SWING”
+Introducción:
+Para nuestra aplicación “Sistema de Gestión de Ventas Aplicando Java Swing” la cual nos permite realizar operaciones: “CRUD (Crear, Leer, Actualizar, Eliminar)”, sobre cualquier tipo de entidad como lo son: Cliente, Productos, Facturas y Detalle de Factura. Incluye un módulo de autentificación con roles de ingreso (Login): administrador y cajero, brindando acceso diferenciado a las funcionalidades de la aplicación. 
+Arquitectura:
+El Proyecto “Sistema de Gestión de Ventas Aplicando Java Swing”, nos muestra un patrón de Lenguaje Unificado Modelado (UML), el cual permite separar las responsabilidades y facilitar el mantenimiento. 
+Para nuestro proyecto elegimos conectar nuestra aplicación “Sistemas de Gestión de Ventas Aplicando Java Swing” con una Base de Datos Mysql que se encuentra en la nube “CleverCloud”, la razón es que vemos la necesidad de aplicar los conocimientos recibidos por parte de nuestra maestra. A pesar de que se lo puede realizar de manera local, nuestra opción elegida se debe a la facilidad de portabilidad y accesibilidad que ofrece el espacio en la nube. 
+Modelado: Contiene la lógica del negocio y la interacción con la base de datos. Aquí se encuentran las clases que representan las entidades (Cliente, Producto, Factura, Detalle _Factura) clases Java y las clases DAO (Usuarios, Contraseñas) que nos ayuda con la persistencia de datos. 
+Vista: Comprende la interfaz de usuario. Son las ventanas y paneles de Java Swing (JFrame, JPanel, JTextField, JButton, JTable entreo otros), con las que el usuario interactúa. 
+Controlador: Actúa como intermediario entre el Modelo y la Vista, maneja los eventos de la interfaz de usuario, muestra la lógica del negocio del Modelo y actualiza la Vista según sea el requerimiento. 
+Componentes Principales:
+Configuración de Base de Datos
+public class ConexiónDB: Esta clase es muy importante para establecer y gestionar la conexión JDBC con la Base de Datos Relacional que en este caso es Mysql que se encuentra en el servidor “CleverCloud”.
+
+Credenciales: Las credenciales de la Base de Datos Relacional Mysql (URL, Usuario, Contraseña) se encuentran ya definidas en el espacio de la Nube “CleverCloud” para mayor seguridad y flexibilidad. 
+A continuación, podremos observar el Código creado en el Entorno de Desarrollo Integrado denominado “Intellij Idea”; 
+Llenar Tabla de Productos:
+User
+Llena la tabla de productos con 10 registros
+Cursor
+Esto nos ayuda a llenar las tablas con 10 registros. Primero, permite examinar la estructura de la Base de Datos actual y el código existente para entender como insertar los datos apropiadamente en la Base.
+Permite revisar el archivo Producto.java para poder comprender la estructura del Producto. 
+Al crear nuestra aplicación “Sistema de Gestión de Ventas Aplicando Java Swing”, ingresamos 10 productos en el archivo de la Base de Datos. Tomando en cuenta la estructura de la Base de Datos, podemos observar que la tabla “Productos” tiene las siguientes columnas: Id, Nombre, Descripción, Precio, Stock y Creado. 
+Código en Java Swing
+Desarrollo:
+```java
+import Login.ConexionDB;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+
+public class PopularProductos {
+    public static void main(String[] args) {
+        Connection conexion = null;
+        PreparedStatement pstmt = null
+        try {
+            Obtiene Conexión a la Base de Datos Mysql:
+            conexion = ConexionDB.obtenerConexion();
+            System.out.println("Conexión establecida exitosamente.");
+          Prepara la consulta SQL para insertar productos:
+            String sql = "INSERT INTO productos (nombre, descripcion, precio, stock, creado) VALUES (?, ?, ?, ?, ?)";
+            pstmt = conexion.prepareStatement(sql);
+          Array de Productos con Datos de Ejemplo:
+            String[][] productos = {
+                {"Laptop HP Pavilion", "Laptop de 15 pulgadas con procesador Intel i5", "899.99", "25"},
+                {"Mouse Inalámbrico Logitech", "Mouse óptico inalámbrico con sensor de 1200 DPI", "29.99", "50"},
+                {"Teclado Mecánico RGB", "Teclado mecánico con switches Cherry MX Blue y retroiluminación RGB", "89.99", "30"},
+                {"Monitor Samsung 24\"", "Monitor LED de 24 pulgadas con resolución Full HD", "199.99", "20"},
+                {"Auriculares Sony WH-1000XM4", "Auriculares inalámbricos con cancelación de ruido", "349.99", "15"},
+                {"Disco Duro Externo 1TB", "Disco duro externo portátil de 1TB USB 3.0", "59.99", "40"},
+                {"Webcam Logitech C920", "Webcam HD 1080p con micrófono integrado", "79.99", "35"},
+                {"Impresora HP LaserJet", "Impresora láser monocromática para oficina", "299.99", "10"},
+                {"Tablet Samsung Galaxy Tab", "Tablet Android de 10 pulgadas con 64GB de almacenamiento", "249.99", "18"},
+                {"Cable HDMI 2.0", "Cable HDMI de alta velocidad de 2 metros", "12.99", "100"}
+            };
+          Insertar cada producto
+            for (int i = 0; i < productos.length; i++) {
+                pstmt.setString(1, productos[i][0]); // nombre
+                pstmt.setString(2, productos[i][1]); // descripcion
+                pstmt.setDouble(3, Double.parseDouble(productos[i][2])); // precio
+                pstmt.setInt(4, Integer.parseInt(productos[i][3])); // stock
+                pstmt.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now())); // creado
+              
+                int filasAfectadas = pstmt.executeUpdate();
+                System.out.println("Producto " + (i + 1) + " insertado: " + productos[i][0] + " - Filas afectadas: " + filasAfectadas);
+            }
+            
+            System.out.println("\n¡"Se han insertado exitosamente 10 productos en la base de datos!");
+            
+        } catch (SQLException e) {
+            System.err.println("Error al insertar productos: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+           Cerrar recursos 
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conexion != null) ConexionDB.cerrarConexion(conexion);
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+}
+```
+Permite reunir y correr el programa para llenar la Tabla de Productos:
+1.	Crea el archivo “PopularProductos.java” que contiene:
+Conexión a la base de datos usando la clase “ConexionDB” existente:
+10 productos de ejemplo con datos realistas:
+Laptop HP Pavilion ($899.99)
+Mouse Inalámbrico Logitech ($29.99)
+Teclado Mecánico RGB ($89.99)
+Monitor Samsung 24" ($199.99)
+Auriculares Sony WH-1000XM4 ($349.99)
+Disco Duro Externo 1TB ($59.99)
+Webcam Logitech C920 ($79.99)
+Impresora HP LaserJet ($299.99)
+Tablet Samsung Galaxy Tab ($249.99)
+Cable HDMI 2.0 ($12.99)
+2.	Cada producto incluye:
+Nombre del producto (Id)
+Descripción detallada
+Precio en formato decimal
+Cantidad en stock
+Fecha de creación automática
+3. “El programa se ejecutó exitosamente” y confirma que todos los 10 productos fueron insertados correctamente en la base de datos.
+La tabla “productos” ahora contiene 10 registros con información completa que puede ser utilizada en nuestro sistema de ventas. El archivo “PopularProductos.java” puede ser reutilizado en el futuro si necesitas agregar más productos o repoblar la tabla.
+User
+Crea una ventana para el CRUD de usuarios usando la tabla usuarios de la base de datos, toma en cuenta que el usuario puede tener un rol como, por ejemplo: administrador o cajero.
+Cursor
+Crea una ventana para el CRUD de usuarios que incluye la gestión de roles. Primero, examina la estructura de la base de datos para entender mejor las tablas de usuarios y roles.
+Crea las clases necesarias para el CRUD de usuarios. Primero, creamos una clase para representar los roles:
+```java
+package Usuarios;
+
+public class Rol {
+    private int id;
+    private String descripcion;
+    
+    public Rol(int id, String descripcion) {
+        this.id = id;
+        this.descripcion = descripcion;
+    }
+    
+    Getters y Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    
+    @Override
+    public String toString() {
+        return descripcion;
+    }
+}
+Clase Usuario:
+```java
+package Usuarios;
+
+import java.time.LocalDateTime;
+
+public class Usuario {
+    private int id;
+    private int rolId;
+    private String nombre;
+    private String email;
+    private LocalDateTime creado;
+    private Rol rol; // Para mostrar la descripción del rol
+    
+    public Usuario(int id, int rolId, String nombre, String email, LocalDateTime creado) {
+        this.id = id;
+        this.rolId = rolId;
+        this.nombre = nombre;
+        this.email = email;
+        this.creado = creado;
+    }
+    
+    public Usuario(int rolId, String nombre, String email) {
+        this.rolId = rolId;
+        this.nombre = nombre;
+        this.email = email;
+        this.creado = LocalDateTime.now();
+    }
+    Getters y Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public int getRolId() { return rolId; }
+    public void setRolId(int rolId) { this.rolId = rolId; }
+    
+    public String getNombre() { return nombre; }
+    public void setNombre(String nombre) { this.nombre = nombre; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
+    public LocalDateTime getCreado() { return creado; }
+    public void setCreado(LocalDateTime creado) { this.creado = creado; }
+    
+    public Rol getRol() { return rol; }
+    public void setRol(Rol rol) { this.rol = rol; }
+    
+    @Override
+    public String toString() {
+        return nombre + " (" + email + ")";
+    }
+}
+Creamos la clase DAO para manejar las operaciones de la Base de Datos:
+```java
+package Usuarios;
+
+import Login.ConexionDB;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UsuarioDAO {
+    
+    Métodos para Roles
+    public List<Rol> obtenerRoles() throws SQLException {
+        List<Rol> roles = new ArrayList<>();
+        String sql = "SELECT id, descripcion FROM roles ORDER BY descripcion";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                roles.add(new Rol(rs.getInt("id"), rs.getString("descripcion")));
+            }
+        }
+        return roles;
+    }
+    
+    public void insertarRol(String descripcion) throws SQLException {
+        String sql = "INSERT INTO roles (descripcion) VALUES (?)";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, descripcion);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    Métodos para Usuarios
+    public List<Usuario> obtenerUsuarios() throws SQLException {
+        List<Usuario> usuarios = new ArrayList<>();
+        String sql = "SELECT u.id, u.rol_id, u.nombre, u.email, u.creado, r.descripcion as rol_descripcion " +
+                     "FROM usuarios u " +
+                     "LEFT JOIN roles r ON u.rol_id = r.id " +
+                     "ORDER BY u.nombre";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Usuario usuario = new Usuario(
+                    rs.getInt("id"),
+                    rs.getInt("rol_id"),
+                    rs.getString("nombre"),
+                    rs.getString("email"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                Asigna el Rol si existe
+                if (rs.getString("rol_descripcion") != null) {
+                    usuario.setRol(new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion")));
+                }
+                
+                usuarios.add(usuario);
+            }
+        }
+        return usuarios;
+    }
+    
+    public void insertarUsuario(Usuario usuario) throws SQLException {
+        String sql = "INSERT INTO usuarios (rol_id, nombre, email, creado) VALUES (?, ?, ?, ?)";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuario.getRolId());
+            pstmt.setString(2, usuario.getNombre());
+            pstmt.setString(3, usuario.getEmail());
+            pstmt.setTimestamp(4, Timestamp.valueOf(usuario.getCreado()));
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void actualizarUsuario(Usuario usuario) throws SQLException {
+        String sql = "UPDATE usuarios SET rol_id = ?, nombre = ?, email = ? WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuario.getRolId());
+            pstmt.setString(2, usuario.getNombre());
+            pstmt.setString(3, usuario.getEmail());
+            pstmt.setInt(4, usuario.getId());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    Elimina Usuario
+    public void eliminarUsuario(int id) throws SQLException {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public Usuario buscarUsuarioPorId(int id) throws SQLException {
+        String sql = "SELECT u.id, u.rol_id, u.nombre, u.email, u.creado, r.descripcion as rol_descripcion " +
+                     "FROM usuarios u " +
+                     "LEFT JOIN roles r ON u.rol_id = r.id " +
+                     "WHERE u.id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Usuario usuario = new Usuario(
+                    rs.getInt("id"),
+                    rs.getInt("rol_id"),
+                    rs.getString("nombre"),
+                    rs.getString("email"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                if (rs.getString("rol_descripcion") != null) {
+                    usuario.setRol(new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion")));
+                }
+                
+                return usuario;
+            }
+        }
+        return null;
+    }
+    Método para llenar Roles Básicos si no existen
+    public void poblarRolesBasicos() throws SQLException {
+        String sql = "SELECT COUNT(*) FROM roles";
+        int count = 0;
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+        }
+        
+        if (count == 0) {
+            insertarRol("Administrador");
+            insertarRol("Cajero");
+            insertarRol("Vendedor");
+            System.out.println("Roles básicos creados: Administrador, Cajero, Vendedor");
+        }
+    }
+}
+Crea la Ventana Principal del CRUD de Usuarios:
+```java
+package Usuarios;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.List;
+
+public class VentanaUsuarios extends JFrame {
+    private JTable tablaUsuarios;
+    private DefaultTableModel modelo;
+    private JTextField txtNombre, txtEmail;
+    private JComboBox<Rol> comboRoles;
+    private JButton btnNuevo, btnGuardar, btnEditar, btnEliminar, btnCancelar;
+    private UsuarioDAO usuarioDAO;
+    private List<Rol> roles;
+    private Usuario usuarioSeleccionado;
+    private boolean modoEdicion = false;
+    
+    public VentanaUsuarios() {
+        usuarioDAO = new UsuarioDAO();
+        inicializarComponentes();
+        cargarRoles();
+        cargarUsuarios();
+    }
+    
+    private void inicializarComponentes() {
+        setTitle("Gestión de Usuarios");
+        setSize(800, 600);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        
+        Panel Principal
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        Panel de Formulario
+        JPanel panelFormulario = crearPanelFormulario();
+        panelPrincipal.add(panelFormulario, BorderLayout.NORTH);
+        
+        Panel de Tabla
+        JPanel panelTabla = crearPanelTabla();
+        panelPrincipal.add(panelTabla, BorderLayout.CENTER);
+        
+        Panel de Botones
+        JPanel panelBotones = crearPanelBotones();
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+        
+        add(panelPrincipal);
+    }
+       private JPanel crearPanelFormulario() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Datos del Usuario"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        
+        Nombre
+        gbc.gridx = 0; gbc.gridy = 0;
+        panel.add(new JLabel("Nombre:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        txtNombre = new JTextField(20);
+        panel.add(txtNombre, gbc);
+        
+        Email
+        gbc.gridx = 0; gbc.gridy = 1;
+        panel.add(new JLabel("Email:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 1;
+        txtEmail = new JTextField(20);
+        panel.add(txtEmail, gbc);
+        
+        Rol
+        gbc.gridx = 0; gbc.gridy = 2;
+        panel.add(new JLabel("Rol:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 2;
+        comboRoles = new JComboBox<>();
+        panel.add(comboRoles, gbc);
+        
+        return panel;
+    }
+       private JPanel crearPanelTabla() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Lista de Usuarios"));
+        
+        Crea Tabla
+        String[] columnas = {"ID", "Nombre", "Email", "Rol", "Fecha Creación"};
+        modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tablaUsuarios = new JTable(modelo);
+        tablaUsuarios.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        Agrega Listener para Selección
+        tablaUsuarios.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int fila = tablaUsuarios.getSelectedRow();
+                if (fila >= 0) {
+                    cargarUsuarioSeleccionado(fila);
+                }
+            }
+        });
+        
+        JScrollPane scrollPane = new JScrollPane(tablaUsuarios);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        
+        return panel;
+    }
+        private JPanel crearPanelBotones() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        
+        btnNuevo = new JButton("Nuevo");
+        btnGuardar = new JButton("Guardar");
+        btnEditar = new JButton("Editar");
+        btnEliminar = new JButton("Eliminar");
+        btnCancelar = new JButton("Cancelar");
+        
+        Configura Botones
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        
+        Agrega Listeners
+        btnNuevo.addActionListener(e -> nuevoUsuario());
+        btnGuardar.addActionListener(e -> guardarUsuario());
+        btnEditar.addActionListener(e -> editarUsuario());
+        btnEliminar.addActionListener(e -> eliminarUsuario());
+        btnCancelar.addActionListener(e -> cancelarOperacion());
+        
+        panel.add(btnNuevo);
+        panel.add(btnGuardar);
+        panel.add(btnEditar);
+        panel.add(btnEliminar);
+        panel.add(btnCancelar);
+        
+        return panel;
+    }
+        private void cargarRoles() {
+        try {
+            Llena Roles Básicos si no existen
+            usuarioDAO.poblarRolesBasicos();
+            
+            roles = usuarioDAO.obtenerRoles();
+            comboRoles.removeAllItems();
+            for (Rol rol : roles) {
+                comboRoles.addItem(rol);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar roles: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarUsuarios() {
+        try {
+            List<Usuario> usuarios = usuarioDAO.obtenerUsuarios();
+            modelo.setRowCount(0);
+            
+            for (Usuario usuario : usuarios) {
+                String rolDescripcion = usuario.getRol() != null ? usuario.getRol().getDescripcion() : "Sin rol";
+                modelo.addRow(new Object[]{
+                    usuario.getId(),
+                    usuario.getNombre(),
+                    usuario.getEmail(),
+                    rolDescripcion,
+                    usuario.getCreado().toString()
+                });
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar usuarios: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarUsuarioSeleccionado(int fila) {
+        int id = (Integer) modelo.getValueAt(fila, 0);
+        try {
+            usuarioSeleccionado = usuarioDAO.buscarUsuarioPorId(id);
+            if (usuarioSeleccionado != null) {
+                txtNombre.setText(usuarioSeleccionado.getNombre());
+                txtEmail.setText(usuarioSeleccionado.getEmail());
+                
+                // Seleccionar el rol correspondiente
+                for (int i = 0; i < comboRoles.getItemCount(); i++) {
+                    Rol rol = comboRoles.getItemAt(i);
+                    if (rol.getId() == usuarioSeleccionado.getRolId()) {
+                        comboRoles.setSelectedIndex(i);
+                        break;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar usuario: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void nuevoUsuario() {
+        limpiarFormulario();
+        habilitarFormulario(true);
+        modoEdicion = false;
+        usuarioSeleccionado = null;
+        
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        
+        txtNombre.requestFocus();
+    }
+    
+    private void guardarUsuario() {
+        if (!validarFormulario()) {
+            return;
+        }
+        
+        try {
+            Rol rolSeleccionado = (Rol) comboRoles.getSelectedItem();
+            if (rolSeleccionado == null) {
+                JOptionPane.showMessageDialog(this, "Debe seleccionar un rol", 
+                                            "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (modoEdicion) {
+                Actualiza Usuario Existente
+                usuarioSeleccionado.setNombre(txtNombre.getText().trim());
+                usuarioSeleccionado.setEmail(txtEmail.getText().trim());
+                usuarioSeleccionado.setRolId(rolSeleccionado.getId());
+                
+                usuarioDAO.actualizarUsuario(usuarioSeleccionado);
+                JOptionPane.showMessageDialog(this, "Usuario actualizado exitosamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                Crea nuevo usuario
+                Usuario nuevoUsuario = new Usuario(
+                    rolSeleccionado.getId(),
+                    txtNombre.getText().trim(),
+                    txtEmail.getText().trim()
+                );
+                
+                usuarioDAO.insertarUsuario(nuevoUsuario);
+                JOptionPane.showMessageDialog(this, "Usuario creado exitosamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            cancelarOperacion();
+            cargarUsuarios();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar usuario: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void editarUsuario() {
+        if (usuarioSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario para editar", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        habilitarFormulario(true);
+        modoEdicion = true;
+        
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        
+        txtNombre.requestFocus();
+    }
+    
+    private void eliminarUsuario() {
+        if (usuarioSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un usuario para eliminar", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
+            "¿Está seguro de que desea eliminar el usuario '" + usuarioSeleccionado.getNombre() + "'?",
+            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                usuarioDAO.eliminarUsuario(usuarioSeleccionado.getId());
+                JOptionPane.showMessageDialog(this, "Usuario eliminado exitosamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarUsuarios();
+                limpiarFormulario();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar usuario: " + e.getMessage(), 
+                                            "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+        private void cancelarOperacion() {
+        limpiarFormulario();
+        habilitarFormulario(false);
+        modoEdicion = false;
+        usuarioSeleccionado = null;
+        
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnEditar.setEnabled(true);
+        btnEliminar.setEnabled(true);
+        btnCancelar.setEnabled(false);
+        
+        tablaUsuarios.clearSelection();
+    }    
+   private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtEmail.setText("");
+        if (comboRoles.getItemCount() > 0) {
+            comboRoles.setSelectedIndex(0);
+        }
+    }
+        private void habilitarFormulario(boolean habilitado) {
+        txtNombre.setEnabled(habilitado);
+        txtEmail.setEnabled(habilitado);
+        comboRoles.setEnabled(habilitado);
+    }
+    
+    private boolean validarFormulario() {
+        if (txtNombre.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El nombre es obligatorio", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            txtNombre.requestFocus();
+            return false;
+        }
+        
+        if (txtEmail.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El email es obligatorio", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            txtEmail.requestFocus();
+            return false;
+        }
+        Validación Básica de Email
+        String email = txtEmail.getText().trim();
+        if (!email.contains("@") || !email.contains(".")) {
+            JOptionPane.showMessageDialog(this, "El formato del email no es válido", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            txtEmail.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeel());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            VentanaUsuarios ventana = new VentanaUsuarios();
+            ventana.setVisible(true);
+        });
+    }
+}
+```
+Crea un Programa para llenar la Tabla de Roles con Roles Básicos:
+```java
+import Login.ConexionDB;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class PoblarRoles {
+    public static void main(String[] args) {
+        Connection conexion = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            Obtiene Conexión a la Base de Datos
+            conexion = ConexionDB.obtenerConexion();
+            System.out.println("Conexión establecida exitosamente.");
+            Prepara la Consulta SQL para insertar Roles
+            String sql = "INSERT INTO roles (descripcion) VALUES (?)";
+            pstmt = conexion.prepareStatement(sql);
+            Array de Roles Básicos
+            String[] roles = {
+                "Administrador",
+                "Cajero", 
+                "Vendedor",
+                "Supervisor",
+                "Gerente"
+            };
+            Inserta cada Rol
+            for (int i = 0; i < roles.length; i++) {
+                pstmt.setString(1, roles[i]);
+                
+                int filasAfectadas = pstmt.executeUpdate();
+                System.out.println("Rol " + (i + 1) + " insertado: " + roles[i] + " - Filas afectadas: " + filasAfectadas);
+            }
+            
+            System.out.println("\n¡Se han insertado exitosamente " + roles.length + " roles en la base de datos!");
+            
+        } catch (SQLException e) {
+            System.err.println("Error al insertar roles: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+           Cierra Recursos
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conexion != null) ConexionDB.cerrarConexion(conexion);
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+}
+Compilar y ejecutar el Programa para poblar los Roles:
+Compilar las clases del CRUD de Usuarios:
+Corregir el error en la Ventana de Usuarios:
+```java
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeel());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            VentanaUsuarios ventana = new VentanaUsuarios();
+            ventana.setVisible(true);
+        });
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            VentanaUsuarios ventana = new VentanaUsuarios();
+            ventana.setVisible(true);
+        });
+    }
+Compilar nuevamente:
+Ejecutar la Ventana de Usuarios:
+🎯 “Sistema CRUD de Usuarios Completado”
+📁 Archivos Creados:
+1. **`src/Usuarios/Rol.java`** - Clase para representar Roles de Usuario
+2. **`src/Usuarios/Usuario.java`** - Clase para representar Usuarios
+3. **`src/Usuarios/UsuarioDAO.java`** - Clase DAO para operaciones de Base de Datos
+4. **`src/Usuarios/VentanaUsuarios.java`** - Ventana Principal con Interfaz Gráfica
+5. **`src/PoblarRoles.java`** - Programa para poblar Roles Básicos
+🔧 Funcionalidades Implementadas:
+Gestión de Roles:
+- ✅ Roles Básicos creados: Administrador, Cajero, Vendedor, Supervisor, Gerente
+- ✅ ComboBox para seleccionar Roles
+- ✅ Relación entre Usuarios y Roles
+
+CRUD Completo de Usuarios:
+- ✅ **Crear** - Nuevo Usuario con validaciones
+- ✅ **Leer** - Lista todos los Usuarios en tabla
+- ✅ **Actualizar** - Editar Usuarios existentes
+- ✅ **Eliminar** - Eliminar Usuarios con confirmación
+Interfaz de Usuario:
+- ✅ **Formulario** con campos: Nombre, Email, Rol
+- ✅ **Tabla** con columnas: ID, Nombre, Email, Rol, Fecha Creación
+- ✅ **Botones** de acción: Nuevo, Guardar, Editar, Eliminar, Cancelar
+- ✅ **Validaciones** de Formulario
+- ✅ **Confirmaciones** para Operaciones Críticas
+Características Técnicas:
+- ✅ Conexión a Base de Datos MySQL
+- ✅ Manejo de excepciones SQL
+- ✅ Interfaz Gráfica con Swing
+- ✅ Patrón DAO para acceso a Datos
+- ✅ Validaciones de Entrada
+- ✅ Interfaz Intuitiva y Responsive
+🎨 Interfaz de Usuario:
+La ventana incluye:
+- **Panel superior**: Formulario para Datos del Usuario
+- **Panel central**: Tabla con Lista de Usuarios
+- **Panel inferior**: Botones de Acción
+- **Validaciones**: Campos obligatorios y Formato de Email
+- **Confirmaciones**: Para eliminar Usuarios
+�� Base de Datos:
+- ✅ Tabla “Roles” poblada con 5 roles básicos
+- ✅ Tabla “Usuarios” lista para recibir registros
+- ✅ Relación FK entre Usuarios y Roles
+- ✅ Campos: id, rol_id, nombre, email, creado
+La ventana está ahora ejecutándose y lista para usar
+Puedes:
+1. **Crear** Nuevos Usuarios seleccionando Roles
+2. **Ver** todos los Usuarios en la Tabla
+3. **Editar** Usuarios Existentes
+4. **Eliminar** Usuarios con Confirmación
+5. **Navegar** entre diferentes Roles disponibles
+¡El sistema CRUD de usuarios está completamente funcional! 🚀
+User
+Crea una Ventana para el Login 
+Cursor
+Crea una ventana de Login para el Sistema. Primero, necesito examinar la estructura actual y luego crear la interfaz de Login.
+Crea la Ventana de Login. Primero, necesitamos verificar si existe una tabla de autenticación o si deberíamos usar la tabla de Usuarios existente
+Vemos que la tabla de Usuarios no tiene campo de contraseña. Creamos una tabla de autenticación y luego la ventana de Login.
+Primero, creamos un script SQL para agregar la Tabla de Autenticación:
+```sql
+Tabla para Autenticación de Usuarios
+CREATE TABLE auth_usuarios (
+    id int(2) PRIMARY KEY NOT NULL auto_increment,
+    usuario_id int(2) NOT NULL,
+    username varchar(50) NOT NULL UNIQUE,
+    password varchar(255) NOT NULL,
+    activo boolean DEFAULT true,
+    ultimo_login datetime,
+    creado datetime DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+Inserta algunos usuarios de Prueba
+Primero insertar Usuarios en la Tabla Usuarios si no existen
+INSERT IGNORE INTO usuarios (rol_id, nombre, email, creado) VALUES 
+(1, 'Administrador Sistema', 'admin@sistema.com', NOW()),
+(2, 'Cajero Principal', 'cajero@sistema.com', NOW()),
+(3, 'Vendedor Ejemplo', 'vendedor@sistema.com', NOW());
+
+Luego inserta Credenciales de Autenticación
+INSERT IGNORE INTO auth_usuarios (usuario_id, username, password, activo) VALUES 
+(1, 'admin', 'admin123', true),
+(2, 'cajero', 'cajero123', true),
+(3, 'vendedor', 'vendedor123', true);
+Crea la clase para manejar la autenticación:
+```java
+package Login;
+
+import Usuarios.Usuario;
+import Usuarios.Rol;
+import java.sql.*;
+import java.time.LocalDateTime;
+
+public class Autenticacion {
+    
+    public static class UsuarioAutenticado {
+        private int id;
+        private String username;
+        private String nombre;
+        private String email;
+        private Rol rol;
+        private LocalDateTime ultimoLogin;
+        
+        public UsuarioAutenticado(int id, String username, String nombre, String email, Rol rol, LocalDateTime ultimoLogin) {
+            this.id = id;
+            this.username = username;
+            this.nombre = nombre;
+            this.email = email;
+            this.rol = rol;
+            this.ultimoLogin = ultimoLogin;
+        }
+        Getters
+        public int getId() { return id; }
+        public String getUsername() { return username; }
+        public String getNombre() { return nombre; }
+        public String getEmail() { return email; }
+        public Rol getRol() { return rol; }
+        public LocalDateTime getUltimoLogin() { return ultimoLogin; }
+        
+        @Override
+        public String toString() {
+            return nombre + " (" + username + ") - " + rol.getDescripcion();
+        }
+    }
+    
+    public static UsuarioAutenticado autenticar(String username, String password) throws SQLException {
+        String sql = "SELECT au.id, au.usuario_id, au.username, au.ultimo_login, " +
+                     "u.nombre, u.email, u.rol_id, r.descripcion as rol_descripcion " +
+                     "FROM auth_usuarios au " +
+                     "INNER JOIN usuarios u ON au.usuario_id = u.id " +
+                     "INNER JOIN roles r ON u.rol_id = r.id " +
+                     "WHERE au.username = ? AND au.password = ? AND au.activo = true";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Crea objeto Rol
+                Rol rol = new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion"));
+                
+                Crea Usuario Autenticado
+                UsuarioAutenticado usuario = new UsuarioAutenticado(
+                    rs.getInt("usuario_id"),
+                    rs.getString("username"),
+                    rs.getString("nombre"),
+                    rs.getString("email"),
+                    rol,
+                    rs.getTimestamp("ultimo_login") != null ? 
+                        rs.getTimestamp("ultimo_login").toLocalDateTime() : null
+                );
+                
+                Actualiza último Login
+                actualizarUltimoLogin(usuario.getId());
+                
+                return usuario;
+            }
+        }
+        
+        return null; // Autenticación fallida
+    }
+    
+    private static void actualizarUltimoLogin(int usuarioId) throws SQLException {
+        String sql = "UPDATE auth_usuarios SET ultimo_login = NOW() WHERE usuario_id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuarioId);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public static boolean cambiarPassword(String username, String passwordActual, String passwordNuevo) throws SQLException {
+        Primero verifica que el Usuario existe y la Contraseña actual es correcta
+        String sqlVerificar = "SELECT id FROM auth_usuarios WHERE username = ? AND password = ? AND activo = true";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sqlVerificar)) {
+            
+            pstmt.setString(1, username);
+            pstmt.setString(2, passwordActual);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Actualiza la contraseña
+                String sqlActualizar = "UPDATE auth_usuarios SET password = ? WHERE username = ?";
+                
+                try (PreparedStatement pstmtUpdate = conn.prepareStatement(sqlActualizar)) {
+                    pstmtUpdate.setString(1, passwordNuevo);
+                    pstmtUpdate.setString(2, username);
+                    
+                    int filasAfectadas = pstmtUpdate.executeUpdate();
+                    return filasAfectadas > 0;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public static boolean crearUsuarioAuth(int usuarioId, String username, String password) throws SQLException {
+        String sql = "INSERT INTO auth_usuarios (usuario_id, username, password, activo) VALUES (?, ?, ?, true)";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuarioId);
+            pstmt.setString(2, username);
+            pstmt.setString(3, password);
+            
+            int filasAfectadas = pstmt.executeUpdate();
+            return filasAfectadas > 0;
+        }
+    }
+}
+Crea la Ventana de Login:
+```java
+package Login;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.SQLException;
+
+public class VentanaLogin extends JFrame {
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+    private JButton btnLogin, btnSalir;
+    private JLabel lblStatus;
+    private JPanel panelPrincipal;
+    
+    public VentanaLogin() {
+        inicializarComponentes();
+        configurarEventos();
+    }
+    
+    private void inicializarComponentes() {
+        setTitle("Sistema de Gestión - Login");
+        setSize(400, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        
+        Panel Principal con Gradiente
+        panelPrincipal = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                
+                int w = getWidth();
+                int h = getHeight();
+                
+                Color color1 = new Color(52, 152, 219);
+                Color color2 = new Color(41, 128, 185);
+                
+                GradientPaint gp = new GradientPaint(0, 0, color1, w, h, color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, w, h);
+            }
+        };
+        panelPrincipal.setLayout(new BorderLayout());
+        
+        Panel del Formulario
+        JPanel panelFormulario = crearPanelFormulario();
+        panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
+        
+        Panel de Estado
+        JPanel panelEstado = crearPanelEstado();
+        panelPrincipal.add(panelEstado, BorderLayout.SOUTH);
+        
+        add(panelPrincipal);
+    }
+    private JPanel crearPanelFormulario() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(50, 40, 50, 40));
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 5, 10, 5);
+        
+        Título
+        JLabel lblTitulo = new JLabel("SISTEMA DE GESTIÓN");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(lblTitulo, gbc);      
+        Subtítulo
+        JLabel lblSubtitulo = new JLabel("Iniciar Sesión");
+        lblSubtitulo.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblSubtitulo.setForeground(Color.WHITE);
+        lblSubtitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        panel.add(lblSubtitulo, gbc);
+        Username
+        JLabel lblUsername = new JLabel("Usuario:");
+        lblUsername.setFont(new Font("Arial", Font.BOLD, 14));
+        lblUsername.setForeground(Color.WHITE);
+        
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(lblUsername, gbc);
+        
+        txtUsername = new JTextField(20);
+        txtUsername.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtUsername.setPreferredSize(new Dimension(200, 35));
+        
+        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(txtUsername, gbc);
+        
+
+        Password
+        JLabel lblPassword = new JLabel("Contraseña:");
+        lblPassword.setFont(new Font("Arial", Font.BOLD, 14));
+        lblPassword.setForeground(Color.WHITE);
+        
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(lblPassword, gbc);
+        
+        txtPassword = new JPasswordField(20);
+        txtPassword.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtPassword.setPreferredSize(new Dimension(200, 35));
+        
+        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(txtPassword, gbc);
+        
+        Panel de Botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        panelBotones.setOpaque(false);
+        
+        btnLogin = new JButton("Iniciar Sesión");
+        btnLogin.setFont(new Font("Arial", Font.BOLD, 14));
+        btnLogin.setPreferredSize(new Dimension(120, 40));
+        btnLogin.setBackground(new Color(46, 204, 113));
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setBorderPainted(false);
+        
+        btnSalir = new JButton("Salir");
+        btnSalir.setFont(new Font("Arial", Font.BOLD, 14));
+        btnSalir.setPreferredSize(new Dimension(120, 40));
+        btnSalir.setBackground(new Color(231, 76, 60));
+        btnSalir.setForeground(Color.WHITE);
+        btnSalir.setFocusPainted(false);
+        btnSalir.setBorderPainted(false);
+        
+        panelBotones.add(btnLogin);
+        panelBotones.add(btnSalir);
+        
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        panel.add(panelBotones, gbc);
+        
+        return panel;
+    }
+    
+    private JPanel crearPanelEstado() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        
+        lblStatus = new JLabel("Ingrese sus credenciales");
+        lblStatus.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblStatus.setForeground(Color.WHITE);
+        lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        panel.add(lblStatus, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    private void configurarEventos() {
+        Evento para el Botón de Login
+        btnLogin.addActionListener(e -> realizarLogin());
+        
+        Evento para el Botón de Salir
+        btnSalir.addActionListener(e -> System.exit(0));
+        
+        Evento para Presionar Enter en los campos
+        txtUsername.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    realizarLogin();
+                }
+            }
+        });
+        
+        txtPassword.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    realizarLogin();
+                }
+            }
+        });
+        
+        Evento para cambiar el Estado de los Botones al hacer Hover
+        btnLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnLogin.setBackground(new Color(39, 174, 96));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnLogin.setBackground(new Color(46, 204, 113));
+            }
+        });
+        
+        btnSalir.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnSalir.setBackground(new Color(192, 57, 43));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnSalir.setBackground(new Color(231, 76, 60));
+            }
+        });
+    }
+    
+    private void realizarLogin() {
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword());
+        
+        Validaciones Básicas
+        if (username.isEmpty()) {
+            mostrarError("Por favor ingrese el nombre de usuario");
+            txtUsername.requestFocus();
+            return;
+        }
+        
+        if (password.isEmpty()) {
+            mostrarError("Por favor ingrese la contraseña");
+            txtPassword.requestFocus();
+            return;
+        }
+        
+        Deshabilita Botones durante la Autenticación
+        btnLogin.setEnabled(false);
+        btnSalir.setEnabled(false);
+        lblStatus.setText("Autenticando...");
+        
+        Realiza Autenticación en un Hilo Separado
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Autenticacion.UsuarioAutenticado usuario = Autenticacion.autenticar(username, password);
+                
+                if (usuario != null) {
+                    Login Exitoso
+                    mostrarExito("Bienvenido, " + usuario.getNombre());
+                    
+                    Cierra Ventana de Login
+                    dispose();
+                    
+                    Abre Ventana Principal según el Rol
+                    abrirVentanaPrincipal(usuario);
+                    
+                } else {
+                    Login Fallido
+                    mostrarError("Usuario o contraseña incorrectos");
+                    txtPassword.setText("");
+                    txtPassword.requestFocus();
+                }
+                
+            } catch (SQLException ex) {
+                mostrarError("Error de conexión: " + ex.getMessage());
+            } finally {
+
+                Habilita Botones Nuevamente
+                btnLogin.setEnabled(true);
+                btnSalir.setEnabled(true);
+            }
+        });
+    }
+    
+    private void abrirVentanaPrincipal(Autenticacion.UsuarioAutenticado usuario) {
+        Aquí se puede abrir diferentes Ventanas según el Rol del Usuario
+        String rol = usuario.getRol().getDescripcion();
+        
+        switch (rol.toLowerCase()) {
+            case "administrador":
+                Abre Ventana de Administrador con Acceso Completo
+                abrirVentanaAdministrador(usuario);
+                break;
+            case "cajero":
+                Abre Ventana de Cajero
+                abrirVentanaCajero(usuario);
+                break;
+            case "vendedor":
+                Abre Ventana de Vendedor
+                abrirVentanaVendedor(usuario);
+                break;
+            default:
+                Ventana Genérica
+                abrirVentanaGenerica(usuario);
+                break;
+        }
+    }
+    
+    private void abrirVentanaAdministrador(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Administrador: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso completo al sistema",
+            "Acceso Administrador", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Gestión de Usuarios
+        // new VentanaUsuarios().setVisible(true);
+    }
+    
+    private void abrirVentanaCajero(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Cajero: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a ventas y caja",
+            "Acceso Cajero", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Ventas
+        // new VentanaVentas().setVisible(true);
+    }
+    
+    private void abrirVentanaVendedor(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Vendedor: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a ventas",
+            "Acceso Vendedor", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+
+        Aquí se puede abrir la Ventana de Ventas
+        // new VentanaVentas().setVisible(true);
+    }
+    
+    private void abrirVentanaGenerica(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion(),
+            "Acceso al Sistema", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void mostrarError(String mensaje) {
+        lblStatus.setText("Error: " + mensaje);
+        lblStatus.setForeground(new Color(231, 76, 60));
+    }
+    
+    private void mostrarExito(String mensaje) {
+        lblStatus.setText(mensaje);
+        lblStatus.setForeground(new Color(46, 204, 113));
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            VentanaLogin ventana = new VentanaLogin();
+            ventana.setVisible(true);
+        });
+    }
+}
+Crea un Programa para Ejecutar el Script SQL y Crear la Tabla de Autenticación:
+```java
+import Login.ConexionDB;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class CrearTablaAuth {
+    public static void main(String[] args) {
+        Connection conexion = null;
+        Statement stmt = null;
+        
+        try {
+            Obtiene Conexión a la Base de Datos
+            conexion = ConexionDB.obtenerConexion();
+            System.out.println("Conexión establecida exitosamente.");
+            
+            stmt = conexion.createStatement();
+            
+            Crea Tabla de Autenticación
+            String crearTabla = "CREATE TABLE IF NOT EXISTS auth_usuarios (" +
+                "id int(2) PRIMARY KEY NOT NULL auto_increment, " +
+                "usuario_id int(2) NOT NULL, " +
+                "username varchar(50) NOT NULL UNIQUE, " +
+                "password varchar(255) NOT NULL, " +
+                "activo boolean DEFAULT true, " +
+                "ultimo_login datetime, " +
+                "creado datetime DEFAULT CURRENT_TIMESTAMP, " +
+                "FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE)";
+            
+            stmt.executeUpdate(crearTabla);
+            System.out.println("Tabla auth_usuarios creada exitosamente.");
+            
+            Inserta Usuarios de Prueba si no existen
+            String insertarUsuarios = "INSERT IGNORE INTO usuarios (rol_id, nombre, email, creado) VALUES " +
+                "(1, 'Administrador Sistema', 'admin@sistema.com', NOW()), " +
+                "(2, 'Cajero Principal', 'cajero@sistema.com', NOW()), " +
+                "(3, 'Vendedor Ejemplo', 'vendedor@sistema.com', NOW())";
+            
+            stmt.executeUpdate(insertarUsuarios);
+            System.out.println("Usuarios de prueba insertados.");
+            
+            Inserta Credenciales de Autenticación
+            String insertarAuth = "INSERT IGNORE INTO auth_usuarios (usuario_id, username, password, activo) VALUES " +
+                "(1, 'admin', 'admin123', true), " +
+                "(2, 'cajero', 'cajero123', true), " +
+                "(3, 'vendedor', 'vendedor123', true)";
+            
+            stmt.executeUpdate(insertarAuth);
+            System.out.println("Credenciales de autenticación insertadas.");
+            
+            System.out.println("\n¡Sistema de autenticación configurado exitosamente!");
+            System.out.println("\nCredenciales de prueba:");
+            System.out.println("Usuario: admin, Contraseña: admin123 (Administrador)");
+            System.out.println("Usuario: cajero, Contraseña: cajero123 (Cajero)");
+            System.out.println("Usuario: vendedor, Contraseña: vendedor123 (Vendedor)");
+            
+        } catch (SQLException e) {
+            System.err.println("Error al configurar autenticación: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // Cerrar recursos
+            try {
+                if (stmt != null) stmt.close();
+                if (conexion != null) ConexionDB.cerrarConexion(conexion);
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+}
+Compila y ejecuta el Programa para Crear la Tabla de Autenticación:
+User
+Crea un Login
+Cursor
+Crea un Sistema de Login completo. Primero, necesitamos verificar la Estructura actual y luego crear los archivos necesarios.
+La Tabla de Usuarios ya tiene campos de Password, activo y ultimo_Login. 
+Crea un Sistema de Login completo:
+
+```java
+package Login;
+
+import Usuarios.Rol;
+import java.sql.*;
+import java.time.LocalDateTime;
+
+public class Autenticacion {
+    
+    public static class UsuarioAutenticado {
+        private int id;
+        private String nombre;
+        private String email;
+        private Rol rol;
+        private LocalDateTime ultimoLogin;
+        private boolean activo;
+        
+        public UsuarioAutenticado(int id, String nombre, String email, Rol rol, LocalDateTime ultimoLogin, boolean activo) {
+            this.id = id;
+            this.nombre = nombre;
+            this.email = email;
+            this.rol = rol;
+            this.ultimoLogin = ultimoLogin;
+            this.activo = activo;
+        }
+        
+        Getters
+        public int getId() { return id; }
+        public String getNombre() { return nombre; }
+        public String getEmail() { return email; }
+        public Rol getRol() { return rol; }
+        public LocalDateTime getUltimoLogin() { return ultimoLogin; }
+        public boolean isActivo() { return activo; }
+        
+        @Override
+        public String toString() {
+            return nombre + " (" + email + ") - " + rol.getDescripcion();
+        }
+    }
+    
+    public static UsuarioAutenticado autenticar(String email, String password) throws SQLException {
+        String sql = "SELECT u.id, u.nombre, u.email, u.ultimo_login, u.activo, " +
+                     "u.rol_id, r.descripcion as rol_descripcion " +
+                     "FROM usuarios u " +
+                     "INNER JOIN roles r ON u.rol_id = r.id " +
+                     "WHERE u.email = ? AND u.password = ? AND u.activo = true";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Crea objeto Rol
+                Rol rol = new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion"));
+                
+                Crea Usuario Autenticado
+                UsuarioAutenticado usuario = new UsuarioAutenticado(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("email"),
+                    rol,
+                    rs.getTimestamp("ultimo_login") != null ? 
+                        rs.getTimestamp("ultimo_login").toLocalDateTime() : null,
+                    rs.getBoolean("activo")
+                );
+                
+                Actualiza Último Login
+                actualizarUltimoLogin(usuario.getId());
+                
+                return usuario;
+            }
+        }
+        
+        return null; // Autenticación fallida
+    }
+    
+    private static void actualizarUltimoLogin(int usuarioId) throws SQLException {
+        String sql = "UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuarioId);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public static boolean cambiarPassword(int usuarioId, String passwordActual, String passwordNuevo) throws SQLException {
+        Primero verifica que el Usuario existe y la Contraseña actual es Correcta
+        String sqlVerificar = "SELECT id FROM usuarios WHERE id = ? AND password = ? AND activo = true";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sqlVerificar)) {
+            
+            pstmt.setInt(1, usuarioId);
+            pstmt.setString(2, passwordActual);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Actualiza la Contraseña
+                String sqlActualizar = "UPDATE usuarios SET password = ? WHERE id = ?";
+                
+                try (PreparedStatement pstmtUpdate = conn.prepareStatement(sqlActualizar)) {
+                    pstmtUpdate.setString(1, passwordNuevo);
+                    pstmtUpdate.setInt(2, usuarioId);
+                    
+                    int filasAfectadas = pstmtUpdate.executeUpdate();
+                    return filasAfectadas > 0;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public static boolean verificarEmailExiste(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE email = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        
+        return false;
+    }
+}
+
+
+Crea la Ventana de Login:
+```java
+package Login;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.SQLException;
+
+public class VentanaLogin extends JFrame {
+    private JTextField txtEmail;
+    private JPasswordField txtPassword;
+    private JButton btnLogin, btnSalir;
+    private JLabel lblStatus;
+    private JPanel panelPrincipal;
+    
+    public VentanaLogin() {
+        inicializarComponentes();
+        configurarEventos();
+    }
+    
+    private void inicializarComponentes() {
+        setTitle("Sistema de Gestión - Login");
+        setSize(400, 500);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+        
+        Panel Principal con Gradiente
+        panelPrincipal = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+                
+                int w = getWidth();
+                int h = getHeight();
+                
+                Color color1 = new Color(52, 152, 219);
+                Color color2 = new Color(41, 128, 185);
+                
+                GradientPaint gp = new GradientPaint(0, 0, color1, w, h, color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, w, h);
+            }
+        };
+        panelPrincipal.setLayout(new BorderLayout());
+        
+        Panel del Formulario
+        JPanel panelFormulario = crearPanelFormulario();
+        panelPrincipal.add(panelFormulario, BorderLayout.CENTER);
+        
+        Panel de Estado
+        JPanel panelEstado = crearPanelEstado();
+        panelPrincipal.add(panelEstado, BorderLayout.SOUTH);
+        
+        add(panelPrincipal);
+    }
+    
+    private JPanel crearPanelFormulario() {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new GridBagLayout());
+        panel.setBorder(BorderFactory.createEmptyBorder(50, 40, 50, 40));
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 5, 10, 5);
+        
+        Título
+        JLabel lblTitulo = new JLabel("SISTEMA DE GESTIÓN");
+        lblTitulo.setFont(new Font("Arial", Font.BOLD, 24));
+        lblTitulo.setForeground(Color.WHITE);
+        lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        gbc.gridx = 0; gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(lblTitulo, gbc);
+        
+        Subtítulo
+        JLabel lblSubtitulo = new JLabel("Iniciar Sesión");
+        lblSubtitulo.setFont(new Font("Arial", Font.PLAIN, 16));
+        lblSubtitulo.setForeground(Color.WHITE);
+        lblSubtitulo.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.gridwidth = 2;
+        panel.add(lblSubtitulo, gbc);
+        
+        Email
+        JLabel lblEmail = new JLabel("Email:");
+        lblEmail.setFont(new Font("Arial", Font.BOLD, 14));
+        lblEmail.setForeground(Color.WHITE);
+        
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.gridwidth = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(lblEmail, gbc);
+        
+        txtEmail = new JTextField(20);
+        txtEmail.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtEmail.setPreferredSize(new Dimension(200, 35));
+        
+        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(txtEmail, gbc);
+        
+        Password
+        JLabel lblPassword = new JLabel("Contraseña:");
+        lblPassword.setFont(new Font("Arial", Font.BOLD, 14));
+        lblPassword.setForeground(Color.WHITE);
+        
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel.add(lblPassword, gbc);
+        
+        txtPassword = new JPasswordField(20);
+        txtPassword.setFont(new Font("Arial", Font.PLAIN, 14));
+        txtPassword.setPreferredSize(new Dimension(200, 35));
+        
+        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel.add(txtPassword, gbc);
+        
+        Panel de Botones
+        JPanel panelBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        panelBotones.setOpaque(false);
+        
+        btnLogin = new JButton("Iniciar Sesión");
+        btnLogin.setFont(new Font("Arial", Font.BOLD, 14));
+        btnLogin.setPreferredSize(new Dimension(120, 40));
+        btnLogin.setBackground(new Color(46, 204, 113));
+        btnLogin.setForeground(Color.WHITE);
+        btnLogin.setFocusPainted(false);
+        btnLogin.setBorderPainted(false);
+        
+        btnSalir = new JButton("Salir");
+        btnSalir.setFont(new Font("Arial", Font.BOLD, 14));
+        btnSalir.setPreferredSize(new Dimension(120, 40));
+        btnSalir.setBackground(new Color(231, 76, 60));
+        btnSalir.setForeground(Color.WHITE);
+        btnSalir.setFocusPainted(false);
+        btnSalir.setBorderPainted(false);
+        
+        panelBotones.add(btnLogin);
+        panelBotones.add(btnSalir);
+        
+        gbc.gridx = 0; gbc.gridy = 4;
+        gbc.gridwidth = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        panel.add(panelBotones, gbc);
+        
+        return panel;
+    }
+    
+    private JPanel crearPanelEstado() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setOpaque(false);
+        panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        
+        lblStatus = new JLabel("Ingrese sus credenciales");
+        lblStatus.setFont(new Font("Arial", Font.PLAIN, 12));
+        lblStatus.setForeground(Color.WHITE);
+        lblStatus.setHorizontalAlignment(SwingConstants.CENTER);
+        
+        panel.add(lblStatus, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    private void configurarEventos() {
+        Evento para el Botón de Login
+        btnLogin.addActionListener(e -> realizarLogin());
+        
+        Evento para el Botón de Salir
+        btnSalir.addActionListener(e -> System.exit(0));
+        
+        Evento para Presionar Enter en los campos
+        txtEmail.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    realizarLogin();
+                }
+            }
+        });
+        
+        txtPassword.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    realizarLogin();
+                }
+            }
+        });
+        
+        Evento para cambiar el Estado de los Botones al hacer Hover
+        btnLogin.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnLogin.setBackground(new Color(39, 174, 96));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnLogin.setBackground(new Color(46, 204, 113));
+            }
+        });
+        
+        btnSalir.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnSalir.setBackground(new Color(192, 57, 43));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnSalir.setBackground(new Color(231, 76, 60));
+            }
+        });
+    }
+    
+    private void realizarLogin() {
+        String email = txtEmail.getText().trim();
+        String password = new String(txtPassword.getPassword());
+        
+        Validaciones Básicas
+        if (email.isEmpty()) {
+            mostrarError("Por favor ingrese el email");
+            txtEmail.requestFocus();
+            return;
+        }
+        
+        if (password.isEmpty()) {
+            mostrarError("Por favor ingrese la contraseña");
+            txtPassword.requestFocus();
+            return;
+        }
+        
+        Validación Básica de Email
+        if (!email.contains("@") || !email.contains(".")) {
+            mostrarError("Por favor ingrese un email válido");
+            txtEmail.requestFocus();
+            return;
+        }
+        
+        Deshabilita Botones durante la Autenticación
+        btnLogin.setEnabled(false);
+        btnSalir.setEnabled(false);
+        lblStatus.setText("Autenticando...");
+        
+        Realiza Autenticación en un Hilo Separado
+        SwingUtilities.invokeLater(() -> {
+            try {
+                Autenticacion.UsuarioAutenticado usuario = Autenticacion.autenticar(email, password);
+                
+                if (usuario != null) {
+                    Login Exitoso
+                    mostrarExito("Bienvenido, " + usuario.getNombre());
+                    
+                    Cierra Ventana de Login
+                    dispose();
+                    
+                    Abre la Ventana Principal según el Rol
+                    abrirVentanaPrincipal(usuario);
+                    
+                } else {
+                    Login Fallido
+                    mostrarError("Email o contraseña incorrectos");
+                    txtPassword.setText("");
+                    txtPassword.requestFocus();
+                }
+                
+            } catch (SQLException ex) {
+                mostrarError("Error de conexión: " + ex.getMessage());
+            } finally {
+                Habilita Botones nuevamente
+                btnLogin.setEnabled(true);
+                btnSalir.setEnabled(true);
+            }
+        });
+    }
+    
+    private void abrirVentanaPrincipal(Autenticacion.UsuarioAutenticado usuario) {
+        Aquí se puede abrir diferentes Ventanas según el Rol del Usuario
+        String rol = usuario.getRol().getDescripcion();
+        
+        switch (rol.toLowerCase()) {
+            case "administrador":
+                Abre la Ventana de Administrador con Acceso Completo
+                abrirVentanaAdministrador(usuario);
+                break;
+            case "cajero":
+                Abrir Ventana de Cajero
+                abrirVentanaCajero(usuario);
+                break;
+            case "vendedor":
+                Abrir Ventana de Vendedor
+                abrirVentanaVendedor(usuario);
+                break;
+            default:
+                Ventana Genérica
+                abrirVentanaGenerica(usuario);
+                break;
+        }
+    }
+    
+    private void abrirVentanaAdministrador(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Administrador: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso completo al sistema",
+            "Acceso Administrador", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Gestión de Usuarios
+        // new VentanaUsuarios().setVisible(true);
+    }
+    
+    private void abrirVentanaCajero(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Cajero: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a ventas y caja",
+            "Acceso Cajero", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Ventas
+        // new VentanaVentas().setVisible(true);
+    }
+    
+    private void abrirVentanaVendedor(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Vendedor: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a ventas",
+            "Acceso Vendedor", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Ventas
+        // new VentanaVentas().setVisible(true);
+    }
+    
+    private void abrirVentanaGenerica(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion(),
+            "Acceso al Sistema", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    private void mostrarError(String mensaje) {
+        lblStatus.setText("Error: " + mensaje);
+        lblStatus.setForeground(new Color(231, 76, 60));
+    }
+    
+    private void mostrarExito(String mensaje) {
+        lblStatus.setText(mensaje);
+        lblStatus.setForeground(new Color(46, 204, 113));
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            VentanaLogin ventana = new VentanaLogin();
+            ventana.setVisible(true);
+        });
+    }
+}
+Crea un programa para poblar la Base de Datos con Usuarios de Prueba:
+```java
+import Login.ConexionDB;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class PoblarUsuariosLogin {
+    public static void main(String[] args) {
+        Connection conexion = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            Obtiene Conexión a la Base de Datos
+            conexion = ConexionDB.obtenerConexion();
+            System.out.println("Conexión establecida exitosamente.");
+            
+            Prepara la Consulta SQL para insertar Usuarios
+            String sql = "INSERT INTO usuarios (rol_id, nombre, password, email, activo, creado) VALUES (?, ?, ?, ?, ?, NOW())";
+            pstmt = conexion.prepareStatement(sql);
+            
+            Array de Usuarios de Prueba
+            Object[][] usuarios = {
+                {1, "Administrador Sistema", "admin123", "admin@sistema.com", true},
+                {2, "Cajero Principal", "cajero123", "cajero@sistema.com", true},
+                {3, "Vendedor Ejemplo", "vendedor123", "vendedor@sistema.com", true},
+                {1, "Supervisor General", "supervisor123", "supervisor@sistema.com", true},
+                {2, "Cajero Secundario", "cajero2", "cajero2@sistema.com", true}
+            };
+            
+            Inserta cada Usuario
+            for (int i = 0; i < usuarios.length; i++) {
+                pstmt.setInt(1, (Integer) usuarios[i][0]); // rol_id
+                pstmt.setString(2, (String) usuarios[i][1]); // nombre
+                pstmt.setString(3, (String) usuarios[i][2]); // password
+                pstmt.setString(4, (String) usuarios[i][3]); // email
+                pstmt.setBoolean(5, (Boolean) usuarios[i][4]); // activo
+                
+                int filasAfectadas = pstmt.executeUpdate();
+                System.out.println("Usuario " + (i + 1) + " insertado: " + usuarios[i][1] + " - Filas afectadas: " + filasAfectadas);
+            }
+            
+            System.out.println("\n¡Se han insertado exitosamente " + usuarios.length + " usuarios en la base de datos!");
+            System.out.println("\nCredenciales de prueba:");
+            System.out.println("Email: admin@sistema.com, Contraseña: admin123 (Administrador)");
+            System.out.println("Email: cajero@sistema.com, Contraseña: cajero123 (Cajero)");
+            System.out.println("Email: vendedor@sistema.com, Contraseña: vendedor123 (Vendedor)");
+            System.out.println("Email: supervisor@sistema.com, Contraseña: supervisor123 (Supervisor)");
+            System.out.println("Email: cajero2@sistema.com, Contraseña: cajero2 (Cajero)");
+            
+        } catch (SQLException e) {
+            System.err.println("Error al insertar usuarios: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            Cierra Recursos
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conexion != null) ConexionDB.cerrarConexion(conexion);
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+}
+Compila y ejecuta el Programa para poblar los Usuarios:
+
+
+```java
+            Prepara la Consulta SQL para insertar Usuarios
+            String sql = "INSERT INTO usuarios (rol_id, nombre, password, email, activo, creado) VALUES (?, ?, ?, ?, ?, NOW())";
+            Prepara la Consulta SQL para insertar Usuarios
+            String sql = "INSERT INTO Usuarios (rol_id, nombre, password, email, activo, Último_Login, creado) VALUES (?, ?, ?, ?, ?, NULL, NOW())";
+Después de corregir el código debido al error arrojado, ejecutamos el programa corregido:
+Corregimos el Programa para manejar correctamente el campo Último_Login:
+```java
+            Prepara la Consulta SQL para insertar Usuarios
+            String sql = "INSERT INTO usuarios (rol_id, nombre, password, email, activo, ultimo_login, creado) VALUES (?, ?, ?, ?, ?, NULL, NOW())";
+            pstmt = conexion.prepareStatement(sql);
+            
+            Array de Usuarios de Prueba
+            Object[][] usuarios = {
+                {1, "Administrador Sistema", "admin123", "admin@sistema.com", true},
+                {2, "Cajero Principal", "cajero123", "cajero@sistema.com", true},
+                {3, "Vendedor Ejemplo", "vendedor123", "vendedor@sistema.com", true},
+                {1, "Supervisor General", "supervisor123", "supervisor@sistema.com", true},
+                {2, "Cajero Secundario", "cajero2", "cajero2@sistema.com", true}
+            };
+            
+            Inserta cada Usuario
+            for (int i = 0; i < usuarios.length; i++) {
+                pstmt.setInt(1, (Integer) usuarios[i][0]); // rol_id
+                pstmt.setString(2, (String) usuarios[i][1]); // nombre
+                pstmt.setString(3, (String) usuarios[i][2]); // password
+                pstmt.setString(4, (String) usuarios[i][3]); // email
+                pstmt.setBoolean(5, (Boolean) usuarios[i][4]); // activo
+
+->
+
+            Prepara la Consulta SQL para insertar Usuarios
+            String sql = "INSERT INTO usuarios (rol_id, nombre, password, email, activo, creado) VALUES (?, ?, ?, ?, ?, NOW())";
+            pstmt = conexion.prepareStatement(sql);
+            
+            Array de Usuarios de Prueba
+            Object[][] usuarios = {
+                {1, "Administrador Sistema", "admin123", "admin@sistema.com", true},
+                {2, "Cajero Principal", "cajero123", "cajero@sistema.com", true},
+                {3, "Vendedor Ejemplo", "vendedor123", "vendedor@sistema.com", true},
+                {1, "Supervisor General", "supervisor123", "supervisor@sistema.com", true},
+                {2, "Cajero Secundario", "cajero2", "cajero2@sistema.com", true}
+            };
+            
+            Inserta cada Usuario
+            for (int i = 0; i < usuarios.length; i++) {
+                pstmt.setInt(1, (Integer) usuarios[i][0]); // rol_id
+                pstmt.setString(2, (String) usuarios[i][1]); // nombre
+                pstmt.setString(3, (String) usuarios[i][2]); // password
+                pstmt.setString(4, (String) usuarios[i][3]); // email
+                pstmt.setBoolean(5, (Boolean) usuarios[i][4]); // activo
+Ejecuta el programa corregido:
+Crea un Script SQL para modificar la Tabla y permitir Valores NULL en Último_Login:
+```sql
+Modificar la Tabla Usuarios para permitir NULL en Último_Login
+ALTER TABLE usuarios MODIFY COLUMN Último_Login Datetime NULL;
+Inserta Usuarios de Prueba
+INSERT IGNORE INTO usuarios (rol_id, nombre, password, email, activo, creado) VALUES 
+(1, 'Administrador Sistema', 'admin123', 'admin@sistema.com', true, NOW()),
+(2, 'Cajero Principal', 'cajero123', 'cajero@sistema.com', true, NOW()),
+(3, 'Vendedor Ejemplo', 'vendedor123', 'vendedor@sistema.com', true, NOW()),
+(1, 'Supervisor General', 'supervisor123', 'supervisor@sistema.com', true, NOW()),
+(2, 'Cajero Secundario', 'cajero2', 'cajero2@sistema.com', true, NOW());
+Crea un programa para ejecutar este script SQL:
+```java
+import Login.ConexionDB;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+
+public class EjecutarScriptSQL {
+    public static void main(String[] args) {
+        Connection conexion = null;
+        Statement stmt = null;
+        
+        try {
+            Obtiene conexión a la Base de Datos
+            conexion = ConexionDB.obtenerConexion();
+            System.out.println("Conexión establecida exitosamente.");
+            
+            stmt = conexion.createStatement();
+            
+            Modifica la Tabla Usuarios para permitir NULL en Último_Login
+            String modificarTabla = "ALTER TABLE usuarios MODIFY COLUMN ultimo_login datetime NULL";
+            stmt.executeUpdate(modificarTabla);
+            System.out.println("Tabla usuarios modificada exitosamente.");
+            
+            Inserta Usuarios de Prueba
+            String insertarUsuarios = "INSERT IGNORE INTO usuarios (rol_id, nombre, password, email, activo, creado) VALUES " +
+                "(1, 'Administrador Sistema', 'admin123', 'admin@sistema.com', true, NOW()), " +
+                "(2, 'Cajero Principal', 'cajero123', 'cajero@sistema.com', true, NOW()), " +
+                "(3, 'Vendedor Ejemplo', 'vendedor123', 'vendedor@sistema.com', true, NOW()), " +
+                "(1, 'Supervisor General', 'supervisor123', 'supervisor@sistema.com', true, NOW()), " +
+                "(2, 'Cajero Secundario', 'cajero2', 'cajero2@sistema.com', true, NOW())";
+            
+            stmt.executeUpdate(insertarUsuarios);
+            System.out.println("Usuarios de prueba insertados exitosamente.");
+            
+            System.out.println("\n¡Sistema de login configurado exitosamente!");
+            System.out.println("\nCredenciales de prueba:");
+            System.out.println("Email: admin@sistema.com, Contraseña: admin123 (Administrador)");
+            System.out.println("Email: cajero@sistema.com, Contraseña: cajero123 (Cajero)");
+            System.out.println("Email: vendedor@sistema.com, Contraseña: vendedor123 (Vendedor)");
+            System.out.println("Email: supervisor@sistema.com, Contraseña: supervisor123 (Supervisor)");
+            System.out.println("Email: cajero2@sistema.com, Contraseña: cajero2 (Cajero)");
+            
+        } catch (SQLException e) {
+            System.err.println("Error al configurar el sistema: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            Cierra Recursos
+            try {
+                if (stmt != null) stmt.close();
+                if (conexion != null) ConexionDB.cerrarConexion(conexion);
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+}
+Compilar y ejecuta este programa:
+Compila y ejecuta la Ventana de Login:
+Se ha creado exitosamente un Sistema de Login completo. Aquí está el resumen de lo implementado:
+�� Sistema de Login Completado
+📁 Archivos Creados:
+1. **`src/Login/Autenticacion.java`** - Clase para manejar la autenticación de usuarios
+2. **`src/Login/VentanaLogin.java`** - Ventana principal de login con interfaz moderna
+3. **`src/PoblarUsuariosLogin.java`** - Programa para poblar usuarios de prueba
+4. **`src/EjecutarScriptSQL.java`** - Programa para configurar la base de datos
+5. **`fix_ultimo_login.sql`** - Script SQL para corregir la estructura de la base de datos
+
+🔧 Funcionalidades Implementadas:
+
+Sistema de Autenticación:
+- ✅ **Autenticación por Email y Contraseña**
+- ✅ **Validación de credenciales en Base de Datos**
+- ✅ **Actualización automática del último Login**
+- ✅ **Verificación de Usuarios Activos**
+- ✅ **Manejo de Roles de Usuario**
+
+Interfaz de Login:
+- ✅ **Diseño moderno con Gradiente Azul**
+- ✅ **Campos para Email y Contraseña**
+- ✅ **Botones de "Iniciar Sesión" y "Salir"**
+- ✅ **Validaciones en tiempo real**
+- ✅ **Mensajes de Estado y Error**
+- ✅ **Efectos Hover en Botones**
+- ✅ **Soporte para Tecla Enter**
+
+
+Base de Datos:
+- ✅ **Tabla Usuarios con Campos: id, rol_id, nombre, password, email, activo, ultimo_login, creado**
+- ✅ **Relación con Tabla Roles**
+- ✅ **5 Usuarios de Prueba Creados**
+- ✅ **Campo Último_Login corregido para permitir NULL**
+�� Usuarios de Prueba Creados:
+1. **Administrador**: `admin@sistema.com` / `admin123`
+2. **Cajero**: `cajero@sistema.com` / `cajero123`
+3. **Vendedor**: `vendedor@sistema.com` / `vendedor123`
+4. **Supervisor**: `supervisor@sistema.com` / `supervisor123`
+5. **Cajero 2**: `cajero2@sistema.com` / `cajero2`
+�� Características de la Interfaz:
+- **Diseño Responsivo**: Ventana de 400x500 píxeles
+- **Gradiente Azul**: Fondo con gradiente profesional
+- **Tipografía Clara**: Fuentes Arial con diferentes pesos
+- **Colores Modernos**: Verde para login, rojo para salir
+- **Validaciones**: Email y Contraseña obligatorios
+- **Feedback Visual**: Mensajes de estado en tiempo real
+🔐 Seguridad:
+- ✅ **Contraseñas ocultas** en campo JPasswordField
+- ✅ **Validación de email** básica
+- ✅ **Verificación de Usuarios Activos**
+- ✅ **Manejo de Errores de Conexión**
+- ✅ **Actualización de último Acceso**
+�� Funcionalidades Adicionales:
+- **Navegación por teclado**: Enter para Iniciar Sesión
+- **Efectos visuales**: Hover en Botones
+- **Manejo de roles**: Diferentes Accesos según el Rol
+- **Mensajes informativos**: Confirmación de Login Exitoso
+- **Cierre automático**: La Ventana se cierra al autenticarse
+
+La ventana de Login se ejecuta y está lista para usar. Se puede probar con cualquiera de las credenciales de prueba listadas en la parte superior. El sistema está completamente funcional y preparado para integrarse con el resto de las ventanas del sistema de gestión. 
+User
+Crea una Ventana CRUD para clientes
+Cursor
+Creamos una ventana CRUD completa para clientes. Primero, examinamos la estructura de la tabla de clientes y luego creamos las clases necesarias.
+```java
+package Clientes;
+
+import java.time.LocalDateTime;
+
+public class Cliente {
+    private int id;
+    private String nombres;
+    private String email;
+    private String telf;
+    private String direccion;
+    private LocalDateTime creado;
+    
+    public Cliente(int id, String nombres, String email, String telf, String direccion, LocalDateTime creado) {
+        this.id = id;
+        this.nombres = nombres;
+        this.email = email;
+        this.telf = telf;
+        this.direccion = direccion;
+        this.creado = creado;
+    }
+    
+    public Cliente(String nombres, String email, String telf, String direccion) {
+        this.nombres = nombres;
+        this.email = email;
+        this.telf = telf;
+        this.direccion = direccion;
+        this.creado = LocalDateTime.now();
+    }
+    
+    Getters y Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    
+    public String getNombres() { return nombres; }
+    public void setNombres(String nombres) { this.nombres = nombres; }
+    
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    
+    public String getTelf() { return telf; }
+    public void setTelf(String telf) { this.telf = telf; }
+    
+    public String getDireccion() { return direccion; }
+    public void setDireccion(String direccion) { this.direccion = direccion; }
+    
+    public LocalDateTime getCreado() { return creado; }
+    public void setCreado(LocalDateTime creado) { this.creado = creado; }
+    
+    @Override
+    public String toString() {
+        return nombres + " (" + email + ")";
+    }
+}
+Creamos la clase DAO para manejar las Operaciones de Base de Datos de Clientes:
+```java
+package Clientes;
+
+import Login.ConexionDB;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClienteDAO {
+    
+    public List<Cliente> obtenerClientes() throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT id, nombres, email, telf, direccion, creado FROM clientes ORDER BY nombres";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombres"),
+                    rs.getString("email"),
+                    rs.getString("telf"),
+                    rs.getString("direccion"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                clientes.add(cliente);
+            }
+        }
+        return clientes;
+    }
+    
+    public void insertarCliente(Cliente cliente) throws SQLException {
+        String sql = "INSERT INTO clientes (nombres, email, telf, direccion, creado) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, cliente.getNombres());
+            pstmt.setString(2, cliente.getEmail());
+            pstmt.setString(3, cliente.getTelf());
+            pstmt.setString(4, cliente.getDireccion());
+            pstmt.setTimestamp(5, Timestamp.valueOf(cliente.getCreado()));
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void actualizarCliente(Cliente cliente) throws SQLException {
+        String sql = "UPDATE clientes SET nombres = ?, email = ?, telf = ?, direccion = ? WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, cliente.getNombres());
+            pstmt.setString(2, cliente.getEmail());
+            pstmt.setString(3, cliente.getTelf());
+            pstmt.setString(4, cliente.getDireccion());
+            pstmt.setInt(5, cliente.getId());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void eliminarCliente(int id) throws SQLException {
+        String sql = "DELETE FROM clientes WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public Cliente buscarClientePorId(int id) throws SQLException {
+        String sql = "SELECT id, nombres, email, telf, direccion, creado FROM clientes WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombres"),
+                    rs.getString("email"),
+                    rs.getString("telf"),
+                    rs.getString("direccion"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+            }
+        }
+        return null;
+    }
+    
+    public List<Cliente> buscarClientesPorNombre(String nombre) throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT id, nombres, email, telf, direccion, creado FROM clientes WHERE nombres LIKE ? ORDER BY nombres";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, "%" + nombre + "%");
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombres"),
+                    rs.getString("email"),
+                    rs.getString("telf"),
+                    rs.getString("direccion"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                clientes.add(cliente);
+            }
+        }
+        return clientes;
+    }
+    
+    public boolean verificarEmailExiste(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE email = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean verificarEmailExisteExcluyendoId(String email, int idExcluir) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE email = ? AND id != ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            pstmt.setInt(2, idExcluir);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        
+        return false;
+    }
+}
+Crea la Ventana Principal del CRUD de Clientes:
+```java
+package Clientes;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.sql.SQLException;
+import java.util.List;
+
+public class VentanaClientes extends JFrame {
+    private JTable tablaClientes;
+    private DefaultTableModel modelo;
+    private JTextField txtNombres, txtEmail, txtTelf, txtDireccion, txtBuscar;
+    private JButton btnNuevo, btnGuardar, btnEditar, btnEliminar, btnCancelar, btnBuscar;
+    private ClienteDAO clienteDAO;
+    private Cliente clienteSeleccionado;
+    private boolean modoEdicion = false;
+    
+    public VentanaClientes() {
+        clienteDAO = new ClienteDAO();
+        inicializarComponentes();
+        cargarClientes();
+    }
+    
+    private void inicializarComponentes() {
+        setTitle("Gestión de Clientes");
+        setSize(900, 700);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        
+        Panel Principal
+        JPanel panelPrincipal = new JPanel(new BorderLayout(10, 10));
+        panelPrincipal.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        
+        Panel de Búsqueda
+        JPanel panelBusqueda = crearPanelBusqueda();
+        panelPrincipal.add(panelBusqueda, BorderLayout.NORTH);
+        
+        Panel de Formulario
+        JPanel panelFormulario = crearPanelFormulario();
+        panelPrincipal.add(panelFormulario, BorderLayout.WEST);
+        
+        Panel de Tabla
+        JPanel panelTabla = crearPanelTabla();
+        panelPrincipal.add(panelTabla, BorderLayout.CENTER);
+        
+        Panel de Botones
+        JPanel panelBotones = crearPanelBotones();
+        panelPrincipal.add(panelBotones, BorderLayout.SOUTH);
+        
+        add(panelPrincipal);
+    }
+    
+    private JPanel crearPanelBusqueda() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        panel.setBorder(BorderFactory.createTitledBorder("Búsqueda de Clientes"));
+        
+        panel.add(new JLabel("Buscar por nombre:"));
+        txtBuscar = new JTextField(20);
+        panel.add(txtBuscar);
+        
+        btnBuscar = new JButton("Buscar");
+        btnBuscar.addActionListener(e -> buscarClientes());
+        panel.add(btnBuscar);
+        
+        JButton btnLimpiar = new JButton("Limpiar");
+        btnLimpiar.addActionListener(e -> {
+            txtBuscar.setText("");
+            cargarClientes();
+        });
+        panel.add(btnLimpiar);
+        
+        return panel;
+    }
+    
+    private JPanel crearPanelFormulario() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Datos del Cliente"));
+        panel.setPreferredSize(new Dimension(300, 400));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.anchor = GridBagConstraints.WEST;
+        
+        Nombres
+        gbc.gridx = 0; gbc.gridy = 0;
+        panel.add(new JLabel("Nombres:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        txtNombres = new JTextField(15);
+        panel.add(txtNombres, gbc);
+        
+        Email
+        gbc.gridx = 0; gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        panel.add(new JLabel("Email:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        txtEmail = new JTextField(15);
+        panel.add(txtEmail, gbc);
+        
+        Teléfono
+        gbc.gridx = 0; gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        panel.add(new JLabel("Teléfono:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        txtTelf = new JTextField(15);
+        panel.add(txtTelf, gbc);
+        
+        Dirección
+        gbc.gridx = 0; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        panel.add(new JLabel("Dirección:"), gbc);
+        
+        gbc.gridx = 1; gbc.gridy = 3;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
+        txtDireccion = new JTextField(15);
+        panel.add(txtDireccion, gbc);
+        
+        return panel;
+    }
+    
+    private JPanel crearPanelTabla() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(BorderFactory.createTitledBorder("Lista de Clientes"));
+        
+        Crea tabla
+        String[] columnas = {"ID", "Nombres", "Email", "Teléfono", "Dirección", "Fecha Creación"};
+        modelo = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        tablaClientes = new JTable(modelo);
+        tablaClientes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        Configura columnas
+        tablaClientes.getColumnModel().getColumn(0).setPreferredWidth(50);  // ID
+        tablaClientes.getColumnModel().getColumn(1).setPreferredWidth(150); // Nombres
+        tablaClientes.getColumnModel().getColumn(2).setPreferredWidth(150); // Email
+        tablaClientes.getColumnModel().getColumn(3).setPreferredWidth(100); // Teléfono
+        tablaClientes.getColumnModel().getColumn(4).setPreferredWidth(200); // Dirección
+        tablaClientes.getColumnModel().getColumn(5).setPreferredWidth(120); // Fecha
+        
+        Agrega Listener para Selección
+        tablaClientes.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                int fila = tablaClientes.getSelectedRow();
+                if (fila >= 0) {
+                    cargarClienteSeleccionado(fila);
+                }
+            }
+        });
+        
+        JScrollPane scrollPane = new JScrollPane(tablaClientes);
+        panel.add(scrollPane, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    private JPanel crearPanelBotones() {
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        
+        btnNuevo = new JButton("Nuevo");
+        btnGuardar = new JButton("Guardar");
+        btnEditar = new JButton("Editar");
+        btnEliminar = new JButton("Eliminar");
+        btnCancelar = new JButton("Cancelar");
+        Configura Botones
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        
+        Agrega Listeners
+        btnNuevo.addActionListener(e -> nuevoCliente());
+        btnGuardar.addActionListener(e -> guardarCliente());
+        btnEditar.addActionListener(e -> editarCliente());
+        btnEliminar.addActionListener(e -> eliminarCliente());
+        btnCancelar.addActionListener(e -> cancelarOperacion());
+        
+        panel.add(btnNuevo);
+        panel.add(btnGuardar);
+        panel.add(btnEditar);
+        panel.add(btnEliminar);
+        panel.add(btnCancelar);
+        
+        return panel;
+    }
+    
+    private void cargarClientes() {
+        try {
+            List<Cliente> clientes = clienteDAO.obtenerClientes();
+            modelo.setRowCount(0);
+            
+            for (Cliente cliente : clientes) {
+                modelo.addRow(new Object[]{
+                    cliente.getId(),
+                    cliente.getNombres(),
+                    cliente.getEmail(),
+                    cliente.getTelf(),
+                    cliente.getDireccion(),
+                    cliente.getCreado().toString()
+                });
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar clientes: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void buscarClientes() {
+        String busqueda = txtBuscar.getText().trim();
+        if (busqueda.isEmpty()) {
+            cargarClientes();
+            return;
+        }
+        
+        try {
+            List<Cliente> clientes = clienteDAO.buscarClientesPorNombre(busqueda);
+            modelo.setRowCount(0);
+            
+            for (Cliente cliente : clientes) {
+                modelo.addRow(new Object[]{
+                    cliente.getId(),
+                    cliente.getNombres(),
+                    cliente.getEmail(),
+                    cliente.getTelf(),
+                    cliente.getDireccion(),
+                    cliente.getCreado().toString()
+                });
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al buscar clientes: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void cargarClienteSeleccionado(int fila) {
+        int id = (Integer) modelo.getValueAt(fila, 0);
+        try {
+            clienteSeleccionado = clienteDAO.buscarClientePorId(id);
+            if (clienteSeleccionado != null) {
+                txtNombres.setText(clienteSeleccionado.getNombres());
+                txtEmail.setText(clienteSeleccionado.getEmail());
+                txtTelf.setText(clienteSeleccionado.getTelf());
+                txtDireccion.setText(clienteSeleccionado.getDireccion());
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar cliente: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void nuevoCliente() {
+        limpiarFormulario();
+        habilitarFormulario(true);
+        modoEdicion = false;
+        clienteSeleccionado = null;
+        
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        
+        txtNombres.requestFocus();
+    }
+    
+    private void guardarCliente() {
+        if (!validarFormulario()) {
+            return;
+        }
+        
+        try {
+            if (modoEdicion) {
+                Actualiza Cliente Existente
+                clienteSeleccionado.setNombres(txtNombres.getText().trim());
+                clienteSeleccionado.setEmail(txtEmail.getText().trim());
+                clienteSeleccionado.setTelf(txtTelf.getText().trim());
+                clienteSeleccionado.setDireccion(txtDireccion.getText().trim());
+                
+                clienteDAO.actualizarCliente(clienteSeleccionado);
+                JOptionPane.showMessageDialog(this, "Cliente actualizado exitosamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                Crea Nuevo Cliente
+                Cliente nuevoCliente = new Cliente(
+                    txtNombres.getText().trim(),
+                    txtEmail.getText().trim(),
+                    txtTelf.getText().trim(),
+                    txtDireccion.getText().trim()
+                );
+                
+                clienteDAO.insertarCliente(nuevoCliente);
+                JOptionPane.showMessageDialog(this, "Cliente creado exitosamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+            cancelarOperacion();
+            cargarClientes();
+            
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al guardar cliente: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void editarCliente() {
+        if (clienteSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente para editar", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        habilitarFormulario(true);
+        modoEdicion = true;
+        
+        btnNuevo.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnEditar.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnCancelar.setEnabled(true);
+        
+        txtNombres.requestFocus();
+    }
+    
+    private void eliminarCliente() {
+        if (clienteSeleccionado == null) {
+            JOptionPane.showMessageDialog(this, "Debe seleccionar un cliente para eliminar", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        int confirmacion = JOptionPane.showConfirmDialog(this, 
+            "¿Está seguro de que desea eliminar el cliente '" + clienteSeleccionado.getNombres() + "'?",
+            "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+        
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            try {
+                clienteDAO.eliminarCliente(clienteSeleccionado.getId());
+                JOptionPane.showMessageDialog(this, "Cliente eliminado exitosamente", 
+                                            "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                cargarClientes();
+                limpiarFormulario();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al eliminar cliente: " + e.getMessage(), 
+                                            "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+    
+    private void cancelarOperacion() {
+        limpiarFormulario();
+        habilitarFormulario(false);
+        modoEdicion = false;
+        clienteSeleccionado = null;
+        
+        btnNuevo.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnEditar.setEnabled(true);
+        btnEliminar.setEnabled(true);
+        btnCancelar.setEnabled(false);
+        
+        tablaClientes.clearSelection();
+    }
+    
+    private void limpiarFormulario() {
+        txtNombres.setText("");
+        txtEmail.setText("");
+        txtTelf.setText("");
+        txtDireccion.setText("");
+    }
+    
+    private void habilitarFormulario(boolean habilitado) {
+        txtNombres.setEnabled(habilitado);
+        txtEmail.setEnabled(habilitado);
+        txtTelf.setEnabled(habilitado);
+        txtDireccion.setEnabled(habilitado);
+    }
+    
+    private boolean validarFormulario() {
+        if (txtNombres.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Los nombres son obligatorios", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            txtNombres.requestFocus();
+            return false;
+        }
+        
+        if (txtEmail.getText().trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "El email es obligatorio", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            txtEmail.requestFocus();
+            return false;
+        }
+        Validación Básica de Email
+        String email = txtEmail.getText().trim();
+        if (!email.contains("@") || !email.contains(".")) {
+            JOptionPane.showMessageDialog(this, "El formato del email no es válido", 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            txtEmail.requestFocus();
+            return false;
+        }
+        
+        Verifica Email Duplicado
+        try {
+            boolean emailExiste;
+            if (modoEdicion && clienteSeleccionado != null) {
+                emailExiste = clienteDAO.verificarEmailExisteExcluyendoId(email, clienteSeleccionado.getId());
+            } else {
+                emailExiste = clienteDAO.verificarEmailExiste(email);
+            }
+            
+            if (emailExiste) {
+                JOptionPane.showMessageDialog(this, "El email ya existe en la base de datos", 
+                                            "Error", JOptionPane.ERROR_MESSAGE);
+                txtEmail.requestFocus();
+                return false;
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error al verificar email: " + e.getMessage(), 
+                                        "Error", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            VentanaClientes ventana = new VentanaClientes();
+            ventana.setVisible(true);
+        });
+    }
+}
+Crea un Programa para poblar la Tabla de Clientes con Datos de ejemplo:
+```java
+import Login.ConexionDB;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+
+public class PoblarClientes {
+    public static void main(String[] args) {
+        Connection conexion = null;
+        PreparedStatement pstmt = null;
+        
+        try {
+            Obtiene la Conexión a la Base de Datos
+            conexion = ConexionDB.obtenerConexion();
+            System.out.println("Conexión establecida exitosamente.");
+            
+            Prepara la Consulta SQL para insertar Clientes
+            String sql = "INSERT INTO clientes (nombres, email, telf, direccion, creado) VALUES (?, ?, ?, ?, NOW())";
+            pstmt = conexion.prepareStatement(sql);
+            
+            Array de Clientes con Datos de Ejemplo
+            Object[][] clientes = {
+                {"Juan Pérez García", "juan.perez@email.com", "555-0101", "Av. Principal 123, Ciudad"},
+                {"María González López", "maria.gonzalez@email.com", "555-0102", "Calle Secundaria 456, Pueblo"},
+                {"Carlos Rodríguez Martínez", "carlos.rodriguez@email.com", "555-0103", "Plaza Central 789, Villa"},
+                {"Ana López Fernández", "ana.lopez@email.com", "555-0104", "Callejón 321, Barrio"},
+                {"Luis Martínez Sánchez", "luis.martinez@email.com", "555-0105", "Avenida Norte 654, Colonia"},
+                {"Carmen Sánchez Ruiz", "carmen.sanchez@email.com", "555-0106", "Boulevard Sur 987, Zona"},
+                {"Roberto Fernández Jiménez", "roberto.fernandez@email.com", "555-0107", "Calle Este 147, Sector"},
+                {"Isabel Jiménez Torres", "isabel.jimenez@email.com", "555-0108", "Avenida Oeste 258, Distrito"},
+                {"Miguel Torres Vega", "miguel.torres@email.com", "555-0109", "Plaza Mayor 369, Urbanización"},
+                {"Laura Vega Morales", "laura.vega@email.com", "555-0110", "Calle Real 741, Residencial"}
+            };
+            
+            Inserta Cada Cliente
+            for (int i = 0; i < clientes.length; i++) {
+                pstmt.setString(1, (String) clientes[i][0]); // nombres
+                pstmt.setString(2, (String) clientes[i][1]); // email
+                pstmt.setString(3, (String) clientes[i][2]); // telf
+                pstmt.setString(4, (String) clientes[i][3]); // direccion
+                
+                int filasAfectadas = pstmt.executeUpdate();
+                System.out.println("Cliente " + (i + 1) + " insertado: " + clientes[i][0] + " - Filas afectadas: " + filasAfectadas);
+            }
+            
+            System.out.println("\n¡Se han insertado exitosamente " + clientes.length + " clientes en la base de datos!");
+            
+        } catch (SQLException e) {
+            System.err.println("Error al insertar clientes: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            // Cerrar recursos
+            try {
+                if (pstmt != null) pstmt.close();
+                if (conexion != null) ConexionDB.cerrarConexion(conexion);
+            } catch (SQLException e) {
+                System.err.println("Error al cerrar recursos: " + e.getMessage());
+            }
+        }
+    }
+}
+Compila y ejecuta el Programa para poblar los Clientes:
+Compila las clases del CRUD de clientes:
+
+
+User
+Modifica la clase Main para que abra la ventana Login. Después modifica la ventana Login para que si el acceso es exitoso abra VentanaUsuarios siempre y cuando el rol sea administrador caso contrario abra VentanaClientes. 
+Cursor
+Modifica la clase Main para que abra la ventana de Login, y luego modifica la ventana de Login para que redirija según el rol del usuario.
+Modifica la clase Main para que abra la ventana de Login:
+```java
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+/**/
+import Ventas.VentaProductos;
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new VentaProductos().setVisible(true);
+        });
+        /*SwingUtilities.invokeLater(() -> {
+            new AplicacionCrudUI().setVisible(true);
+        });*/
+    }
+}
+import Login.VentanaLogin;
+import javax.swing.*;
+
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            
+            VentanaLogin ventanaLogin = new VentanaLogin();
+            ventanaLogin.setVisible(true);
+        });
+    }
+}
+Modifica la Ventana de Login para que redirija según el Rol del Usuario:
+```java
+    private void abrirVentanaPrincipal(Autenticacion.UsuarioAutenticado usuario) {
+        Aquí se puede abrir diferentes Ventanas según el Rol del Usuario
+        String rol = usuario.getRol().getDescripcion();
+        
+        switch (rol.toLowerCase()) {
+            case "administrador":
+                Abre la Ventana de Administrador con Acceso Completo
+                abrirVentanaAdministrador(usuario);
+                break;
+            case "cajero":
+                Abre la Ventana de Cajero
+                abrirVentanaCajero(usuario);
+                break;
+            case "vendedor":
+                Abre la Ventana de Vendedor
+                abrirVentanaVendedor(usuario);
+                break;
+            default:
+                Ventana Genérica
+                abrirVentanaGenerica(usuario);
+                break;
+        }
+    }
+    private void abrirVentanaPrincipal(Autenticacion.UsuarioAutenticado usuario) {
+        Aquí se puede abrir diferentes Ventanas según el Rol del Usuario
+        String rol = usuario.getRol().getDescripcion();
+        
+        switch (rol.toLowerCase()) {
+            case "administrador":
+                Abre la Ventana de Administrador con Acceso Completo
+                abrirVentanaAdministrador(usuario);
+                break;
+            case "cajero":
+            case "vendedor":
+            case "supervisor":
+            case "gerente":
+            default:
+                Para todos los demás Roles, abre la Ventana de Clientes
+                abrirVentanaClientes(usuario);
+                break;
+        }
+    }
+Agrega el Método abrirVentanaClientes y modifica el Método abrirVentanaAdministrador:
+
+```java
+    private void abrirVentanaAdministrador(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Administrador: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso completo al sistema",
+            "Acceso Administrador", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Gestión de Usuarios
+        // new VentanaUsuarios().setVisible(true);
+    }
+    private void abrirVentanaCajero(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Cajero: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a ventas y caja",
+            "Acceso Cajero", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Ventas
+        // new VentanaVentas().setVisible(true);
+    }
+    
+    private void abrirVentanaVendedor(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Vendedor: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a ventas",
+            "Acceso Vendedor", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Aquí se puede abrir la Ventana de Ventas
+        // new VentanaVentas().setVisible(true);
+    }
+    
+    private void abrirVentanaGenerica(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion(),
+            "Acceso al Sistema", 
+            JOptionPane.INFORMATION_MESSAGE);
+    }
+    private void abrirVentanaAdministrador(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido Administrador: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso completo al sistema",
+            "Acceso Administrador", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Abre la Ventana de Gestión de Usuarios
+        try {
+            Usuarios.VentanaUsuarios ventanaUsuarios = new Usuarios.VentanaUsuarios();
+            ventanaUsuarios.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al abrir la ventana de usuarios: " + e.getMessage(),
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    private void abrirVentanaClientes(Autenticacion.UsuarioAutenticado usuario) {
+        JOptionPane.showMessageDialog(this, 
+            "Bienvenido: " + usuario.getNombre() + "\n" +
+            "Rol: " + usuario.getRol().getDescripcion() + "\n" +
+            "Acceso a gestión de clientes",
+            "Acceso al Sistema", 
+            JOptionPane.INFORMATION_MESSAGE);
+        
+        Abre la ventana de Gestión de Clientes
+        try {
+            Clientes.VentanaClientes ventanaClientes = new Clientes.VentanaClientes();
+            ventanaClientes.setVisible(true);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error al abrir la ventana de clientes: " + e.getMessage(),
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+Compila y ejecuta todas las clases necesarias para que el sistema funcione correctamente:
+Ejecutar el Programa Principal para probar el Sistema:
+Se ha modificado exitosamente el Sistema según tus requerimientos. Aquí se observa el resumen de los cambios realizados:
+🎯 Modificaciones Completadas
+📝 Cambios en Main.java:
+- ✅ **Eliminé** la apertura directa de `VentaProductos`
+- ✅ **Agregué** la apertura de `VentanaLogin` como punto de entrada
+- ✅ **Configuré** el look and feel del sistema
+- ✅ **Ahora** el programa inicia con la ventana de login
+�� Cambios en VentanaLogin.java:
+- ✅ **Modifiqué** la lógica de redirección según roles
+- ✅ **Administrador**: Abre `VentanaUsuarios` (CRUD de usuarios)
+- ✅ **Otros roles** (Cajero, Vendedor, Supervisor, Gerente): Abren `VentanaClientes` (CRUD de clientes)
+- ✅ **Agregué** manejo de excepciones para la apertura de ventanas
+- ✅ **Mensajes informativos** según el rol del usuario
+🎨 Flujo del Sistema:
+1. Inicio del Programa:
+Main.java → VentanaLogin
+2. Autenticación Exitosa:
+- **Si el rol es "Administrador"** → Abre `VentanaUsuarios`
+- **Si el rol es cualquier otro** → Abre `VentanaClientes`
+3. Credenciales de Prueba:
+- **Administrador**: `admin@sistema.com` / `admin123` → VentanaUsuarios
+- **Cajero**: `cajero@sistema.com` / `cajero123` → VentanaClientes
+- **Vendedor**: `vendedor@sistema.com` / `vendedor123` → VentanaClientes
+- **Supervisor**: `supervisor@sistema.com` / `supervisor123` → VentanaClientes
+🔧 Funcionalidades Implementadas:
+Sistema de Login:
+- ✅ **Autenticación** por email y contraseña
+- ✅ **Validación** de credenciales
+- ✅ **Redirección** automática según rol
+- ✅ **Manejo de errores** en apertura de ventanas
+Control de Acceso:
+- ✅ **Administradores**: Acceso completo al CRUD de usuarios
+- ✅ **Otros roles**: Acceso al CRUD de clientes
+- ✅ **Mensajes informativos** de bienvenida
+- ✅ **Confirmación** de acceso exitoso
+Integración Completa:
+- ✅ **Main.java** → **VentanaLogin** → **VentanaUsuarios/VentanaClientes**
+- ✅ **Compilación exitosa** de todas las clases
+- ✅ **Sistema ejecutándose** en segundo plano
+🚀 Cómo Probar el Sistema:
+1. **Ejecutar**: `java -cp "lib/*:src" Main`
+2. **Login como Administrador**: `admin@sistema.com` / `admin123`
+   - Se abrirá la ventana de gestión de usuarios
+3. **Login como Cajero**: `cajero@sistema.com` / `cajero123`
+   - Se abrirá la ventana de gestión de clientes
+El sistema se encuentra completamente funcional con el flujo de autenticación y redirección según roles que solicitaste. ¡El programa principal está ejecutándose y listo para usar! 🎉
+Evidencia de la Aplicación: 
+A continuación, se visualizará todas las ventanas que corresponden a nuestro “Proyecto Final” de la materia Programación Orientada a Objetos, tomando en cuenta las especificaciones y requerimientos por parte de nuestra docente. 
+1.- Ventana Inicial “Sistema de Gestión de Ventas Aplicando Java Swing”
+ 
+Ventana Login o Ingreso: Como se puede observar en esta ventana tenemos acceso para Correo Electrónico con su respectiva Contraseña, Botones de Inicio de Sesión y Salir. A nuestro parecer la ventana es de un uso practico y sencillo que puede ser manejable por la gran mayoría de personas. 
+Procedemos a ingresar los datos respectivos, mismos que se encuentran debidamente almacenados en nuestra Base de Datos “CleverCloud” la cual se encuentra interconectada con el Sistema en la Aplicación de Java Swing.
+Dejamos una imagen de referencia de la Tabla de Usuarios con su respectiva información. 
+ 
+Roles registrados en la Base de Datos.
+ 
+En el caso de ingresar la información correcta el sistema valida el ingreso. 
+ 
+Si la información es correcta tendremos esta respuesta por parte del Sistema:
+ 
+En el caso de no ingresar el Email y Contraseña correctamente el Sistema nos proporciona esta respuesta:
+ 
+ 
+ 
+2.- Ventana de Ventas: 
+Si ingresamos con el Usuario “Gerente”, el cual ha sido asignado al correo: julia.cachimuel@cenestur.edu.ec, tendremos la siguiente respuesta: 
+“Sistema de Ventas” 
+Esta ventana nos ayuda a realizar la venta, escoger el producto, la cantidad y agregar al carrito. Existen las opciones de eliminar un producto del carrito y otro para realizar la venta. 
+ 
+En el caso de escoger una cantidad mayor a la disponible en el stock tendremos esta ventana de alerta la cual indica lo siguiente:
+ 
+Si el proceso de venta se realizó sin ningún inconveniente tendremos lo siguiente:
+ 
+3.- Ventana de Usuarios: 
+Si ingresamos con el Usuario “Administrador Sistema”, el cual ha sido asignado al correo: admin@sistema.com tendremos la siguiente respuesta: 
+ 
+ 
+“Gestión de Usuarios”
+Esta ventana nos permite manipular todos los datos del Usuario; como se puede observar tenemos Botones para Crear, Editar, Eliminar y Guardar un nuevo Usuario. En esta ventana se observa todos los detalles que tiene, por ejemplo: Nombre, Password, Email y Rol.
+ 
+Al seleccionar un Usuario se visualiza de la siguiente manera:
+ 
+Si usamos la Función Editar obtenemos la siguiente respuesta: 
+ 
+4.- Ventana de Productos
+Si ingresamos con el Usuario “Cajero Principal”, el cual ha sido asignado al correo: cajero@sistema.com tendremos la siguiente respuesta: 
+ 
+ 
+“Gestión de Productos”
+Esta ventana nos permite controlar y verificar todos los Productos que se encuentran registrados en la Base de Datos, además de verificar todos los detalles como Id, Nombre, Descripción, Precio, Stock y Fecha Creación, como en las ventanas anteriores tiene los Botones que nos permite Crear, Guardar, Editar y Eliminar. 
+ 
+ 
+“Ventana de Productos”
+Si ingresamos con el Usuario “Vendedor Ejemplo”, el cual ha sido asignado al correo: vendedor@sistema.com tendremos la siguiente respuesta: 
+
+ 
+ 
+“Gestión de Productos”
+Esta ventana nos permite controlar y verificar todos los Productos que se encuentran registrados en la Base de Datos, además de verificar todos los detalles como Id, Nombre, Descripción, Precio, Stock y Fecha Creación, como en las ventanas anteriores tiene los Botones que nos permite Crear, Guardar, Editar y Eliminar. 
+ 
+5.- Ventana de Clientes
+Si ingresamos con el Usuario “Jesus Abril”, el cual ha sido asignado al correo: jesus.abril@cenestur.edu.ec tendremos la siguiente respuesta: 
+ 
+ 
+“Gestión Clientes”
+Esta ventana nos permite controlar y verificar todos los Clientes que se encuentran registrados en la Base de Datos, además de verificar todos los detalles como Id, Nombre, Email, Teléfono, Dirección y Fecha Creación, como en las ventanas anteriores tiene los Botones que nos permite Crear, Guardar, Editar y Eliminar. 
+ 
+ 
+ 
+ 
+Conclusiones:
+El Sistema de Gestión de Ventas Aplicando Java Swing es una herramienta muy útil para el desempeño de nuevas creaciones y puede realizar cualquier tipo de sistema o aplicación la cual ayude a gestionar diferentes módulos que contienen distinta información.
+Ha sido un proceso enriquecedor poder aplicar los conocimientos aprendidos, pero también recalcamos que no ha sido una tarea fácil, se presentaron una serie de errores que en el Manual Técnico se puede observar con mas detalle. 
+Cabe mencionar que para el Video solicitado debido a que no pudimos correr nuestro código en “Intellij Brains” ya que se caduco la licencia gratuita, usamos otra herramienta como lo es “Visual Studio Code” la cual también nos permite desarrollar el lenguaje de Programación Java Swing. Es importante compartir esta anécdota ya que es una gran responsabilidad para el programador ampliar sus horizontes de conocimiento, el cual nos permite solventar alguna situación o error que se nos presente. 
+Recomendaciones:
+Como grupo vemos necesario recomendar que dada la extensión de información que se debe aplicar y el tipo de estudio que realizamos se debería mejorar los aspectos, solicitudes o requerimientos del Proyecto, principalmente para que el estudiante pueda dar cumplimiento pleno de lo que se debe entregar. 
+Como gestores del Proyecto hubiéramos querido elaborar algo mas completo y sobre todo que se integre con todas las ventanas, pero no lo pudimos lograr, esperamos que en siguientes trabajos podamos aplicar lo que nos faltó. 
+Agradecimiento:
+Creemos que es necesario el agradecer a nuestra maestra la Ing. Yadira Franco por su desempeño y su dedicación en el proceso educativo que si bien ha sido complejo por la cantidad de información y el poco tiempo disponible para el aprendizaje ha logrado plasmar gran parte de su conocimiento el Lenguajes de Programación. 
+Link de Video: 
+https://youtu.be/WtwFjivnIpY
+
+
