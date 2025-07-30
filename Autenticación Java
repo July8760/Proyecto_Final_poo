@@ -1,0 +1,136 @@
+package Login;
+
+import Usuarios.Rol;
+import java.sql.*;
+import java.time.LocalDateTime;
+
+public class Autenticacion {
+    
+    public static class UsuarioAutenticado {
+        private int id;
+        private String nombre;
+        private String email;
+        private Rol rol;
+        private LocalDateTime ultimoLogin;
+        private boolean activo;
+        
+        public UsuarioAutenticado(int id, String nombre, String email, Rol rol, LocalDateTime ultimoLogin, boolean activo) {
+            this.id = id;
+            this.nombre = nombre;
+            this.email = email;
+            this.rol = rol;
+            this.ultimoLogin = ultimoLogin;
+            this.activo = activo;
+        }
+        
+        // Getters
+        public int getId() { return id; }
+        public String getNombre() { return nombre; }
+        public String getEmail() { return email; }
+        public Rol getRol() { return rol; }
+        public LocalDateTime getUltimoLogin() { return ultimoLogin; }
+        public boolean isActivo() { return activo; }
+        
+        @Override
+        public String toString() {
+            return nombre + " (" + email + ") - " + rol.getDescripcion();
+        }
+    }
+    
+    public static UsuarioAutenticado autenticar(String email, String password) throws SQLException {
+        String sql = "SELECT u.id, u.nombre, u.email, u.ultimo_login, u.activo, " +
+                     "u.rol_id, r.descripcion as rol_descripcion " +
+                     "FROM usuarios u " +
+                     "INNER JOIN roles r ON u.rol_id = r.id " +
+                     "WHERE u.email = ? AND u.password = ? AND u.activo = true";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                // Crear objeto Rol
+                Rol rol = new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion"));
+                
+                // Crear usuario autenticado
+                UsuarioAutenticado usuario = new UsuarioAutenticado(
+                    rs.getInt("id"),
+                    rs.getString("nombre"),
+                    rs.getString("email"),
+                    rol,
+                    rs.getTimestamp("ultimo_login") != null ? 
+                        rs.getTimestamp("ultimo_login").toLocalDateTime() : null,
+                    rs.getBoolean("activo")
+                );
+                
+                // Actualizar último login
+                actualizarUltimoLogin(usuario.getId());
+                
+                return usuario;
+            }
+        }
+        
+        return null; // Autenticación fallida
+    }
+    
+    private static void actualizarUltimoLogin(int usuarioId) throws SQLException {
+        String sql = "UPDATE usuarios SET ultimo_login = NOW() WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuarioId);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public static boolean cambiarPassword(int usuarioId, String passwordActual, String passwordNuevo) throws SQLException {
+        // Primero verificar que el usuario existe y la contraseña actual es correcta
+        String sqlVerificar = "SELECT id FROM usuarios WHERE id = ? AND password = ? AND activo = true";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sqlVerificar)) {
+            
+            pstmt.setInt(1, usuarioId);
+            pstmt.setString(2, passwordActual);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                // Actualizar la contraseña
+                String sqlActualizar = "UPDATE usuarios SET password = ? WHERE id = ?";
+                
+                try (PreparedStatement pstmtUpdate = conn.prepareStatement(sqlActualizar)) {
+                    pstmtUpdate.setString(1, passwordNuevo);
+                    pstmtUpdate.setInt(2, usuarioId);
+                    
+                    int filasAfectadas = pstmtUpdate.executeUpdate();
+                    return filasAfectadas > 0;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    public static boolean verificarEmailExiste(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM usuarios WHERE email = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        
+        return false;
+    }
+} 
