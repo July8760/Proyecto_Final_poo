@@ -1,0 +1,160 @@
+package Clientes;
+
+import Login.ConexionDB;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ClienteDAO {
+    
+    public List<Cliente> obtenerClientes() throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT id, nombres, email, telf, direccion, creado FROM clientes ORDER BY nombres";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombres"),
+                    rs.getString("email"),
+                    rs.getString("telf"),
+                    rs.getString("direccion"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                clientes.add(cliente);
+            }
+        }
+        return clientes;
+    }
+    
+    public void insertarCliente(Cliente cliente) throws SQLException {
+        String sql = "INSERT INTO clientes (nombres, email, telf, direccion, creado) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, cliente.getNombres());
+            pstmt.setString(2, cliente.getEmail());
+            pstmt.setString(3, cliente.getTelf());
+            pstmt.setString(4, cliente.getDireccion());
+            pstmt.setTimestamp(5, Timestamp.valueOf(cliente.getCreado()));
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void actualizarCliente(Cliente cliente) throws SQLException {
+        String sql = "UPDATE clientes SET nombres = ?, email = ?, telf = ?, direccion = ? WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, cliente.getNombres());
+            pstmt.setString(2, cliente.getEmail());
+            pstmt.setString(3, cliente.getTelf());
+            pstmt.setString(4, cliente.getDireccion());
+            pstmt.setInt(5, cliente.getId());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void eliminarCliente(int id) throws SQLException {
+        String sql = "DELETE FROM clientes WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public Cliente buscarClientePorId(int id) throws SQLException {
+        String sql = "SELECT id, nombres, email, telf, direccion, creado FROM clientes WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombres"),
+                    rs.getString("email"),
+                    rs.getString("telf"),
+                    rs.getString("direccion"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+            }
+        }
+        return null;
+    }
+    
+    public List<Cliente> buscarClientesPorNombre(String nombre) throws SQLException {
+        List<Cliente> clientes = new ArrayList<>();
+        String sql = "SELECT id, nombres, email, telf, direccion, creado FROM clientes WHERE nombres LIKE ? ORDER BY nombres";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, "%" + nombre + "%");
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                Cliente cliente = new Cliente(
+                    rs.getInt("id"),
+                    rs.getString("nombres"),
+                    rs.getString("email"),
+                    rs.getString("telf"),
+                    rs.getString("direccion"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                clientes.add(cliente);
+            }
+        }
+        return clientes;
+    }
+    
+    public boolean verificarEmailExiste(String email) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE email = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        
+        return false;
+    }
+    
+    public boolean verificarEmailExisteExcluyendoId(String email, int idExcluir) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM clientes WHERE email = ? AND id != ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setString(1, email);
+            pstmt.setInt(2, idExcluir);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        
+        return false;
+    }
+} 
