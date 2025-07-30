@@ -1,0 +1,135 @@
+package Usuarios;
+
+import Login.ConexionDB;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+public class UsuarioDAO {
+    
+    // Métodos para Roles
+    public List<Rol> obtenerRoles() throws SQLException {
+        List<Rol> roles = new ArrayList<>();
+        String sql = "SELECT id, descripcion FROM roles ORDER BY descripcion";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                roles.add(new Rol(rs.getInt("id"), rs.getString("descripcion")));
+            }
+        }
+        return roles;
+    }
+    
+
+    // Métodos para Usuarios
+    public List<Usuario> obtenerUsuarios() throws SQLException {
+        List<Usuario> usuarios = new ArrayList<>();
+        String sql = "SELECT u.id, u.rol_id, u.nombre, u.password, u.email, u.creado, r.descripcion as rol_descripcion " +
+                     "FROM usuarios u " +
+                     "LEFT JOIN roles r ON u.rol_id = r.id " +
+                     "ORDER BY u.id";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            
+            while (rs.next()) {
+                Usuario usuario = new Usuario(
+                    rs.getInt("id"),
+                    rs.getInt("rol_id"),
+                    rs.getString("nombre"),
+                    rs.getString("password"),
+                    rs.getString("email"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                // Asignar el rol si existe
+                if (rs.getString("rol_descripcion") != null) {
+                    usuario.setRol(new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion")));
+                }
+                
+                usuarios.add(usuario);
+            }
+        }
+        return usuarios;
+    }
+    
+    public void insertarUsuario(Usuario usuario) throws SQLException {
+        String sql = "INSERT INTO usuarios (rol_id, nombre, password, email, creado) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuario.getRolId());
+            pstmt.setString(2, usuario.getNombre());
+            pstmt.setString( 3, usuario.getPassword());
+            pstmt.setString(4, usuario.getEmail());
+            pstmt.setTimestamp(5, Timestamp.valueOf(usuario.getCreado()));
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void actualizarUsuario(Usuario usuario) throws SQLException {
+        String sql = "UPDATE usuarios SET rol_id = ?, nombre = ?, password = ?, email = ? WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, usuario.getRolId());
+            pstmt.setString(2, usuario.getNombre());
+            pstmt.setString( 3, usuario.getPassword());
+            pstmt.setString(4, usuario.getEmail());
+            pstmt.setInt(5, usuario.getId());
+            
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public void eliminarUsuario(int id) throws SQLException {
+        String sql = "DELETE FROM usuarios WHERE id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        }
+    }
+    
+    public Usuario buscarUsuarioPorId(int id) throws SQLException {
+        String sql = "SELECT u.id, u.rol_id, u.nombre, u.password,u.email, u.creado, r.descripcion as rol_descripcion " +
+                     "FROM usuarios u " +
+                     "LEFT JOIN roles r ON u.rol_id = r.id " +
+                     "WHERE u.id = ?";
+        
+        try (Connection conn = ConexionDB.obtenerConexion();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                Usuario usuario = new Usuario(
+                    rs.getInt("id"),
+                    rs.getInt("rol_id"),
+                    rs.getString("nombre"),
+                    rs.getString("password"),
+                    rs.getString("email"),
+                    rs.getTimestamp("creado").toLocalDateTime()
+                );
+                
+                if (rs.getString("rol_descripcion") != null) {
+                    usuario.setRol(new Rol(rs.getInt("rol_id"), rs.getString("rol_descripcion")));
+                }
+                
+                return usuario;
+            }
+        }
+        return null;
+    }
+} 
