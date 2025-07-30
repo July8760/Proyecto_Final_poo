@@ -1,4 +1,7 @@
 # Proyecto_Final_poo
+Integrantes:
+Jesus Mesias Abril Ballesteros
+Julia Sarina Cachimuel Velasco
 Sistema de Gestión de Ventas Aplicando Java Swing 
 Informacion de Usuarios
 Julia Cachimuel
